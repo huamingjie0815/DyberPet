@@ -140,7 +140,7 @@ class CharInterface(ScrollArea):
     def __initLayout(self):
         self.titleWidget.move(50, 20)
         self.headerWidget.move(55, 75)
- 
+
         # add setting card group to layout
         self.expandLayout.setSpacing(28)
         self.expandLayout.setContentsMargins(60, 10, 60, 0)

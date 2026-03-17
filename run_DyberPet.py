@@ -68,11 +68,8 @@ class DyberPetApp(QApplication):
         # Accessory System
         self.acc = DPAccessory()
 
-        # System Panel
+        # System Panel (combined with Dashboard)
         self.conp = ControlMainWindow()
-
-        # Dashboard
-        self.board = DashboardMainWindow()
 
         # Midnight Timer
         self.current_date = QDate.currentDate()
@@ -106,21 +103,22 @@ class DyberPetApp(QApplication):
 
         self.conp.charCardInterface.change_pet.connect(self.p._change_pet)
         self.p.show_controlPanel.connect(self.conp.show_window)
+        self.p.show_chat.connect(self.conp.show_chat)
 
         self.conp.gamesaveInterface.refresh_pet.connect(self.p.refresh_pet)
 
-        # Dashboard - others
-        self.p.show_dashboard.connect(self.board.show_window)
-        self.note.noteToLog.connect(self.board.statusInterface._addNote)
+        # Dashboard - now part of control panel
+        self.p.show_dashboard.connect(self.conp.show_window)
+        self.note.noteToLog.connect(self.conp.statusInterface._addNote)
 
         # Tasks and Timer
-        self.board.taskInterface.focusPanel.start_pomodoro.connect(self.p.run_tomato)
-        self.board.taskInterface.focusPanel.cancel_pomodoro.connect(self.p.cancel_tomato)
-        self.board.taskInterface.focusPanel.start_focus.connect(self.p.run_focus)
-        self.board.taskInterface.focusPanel.cancel_focus.connect(self.p.cancel_focus)
-        self.p.taskUI_Timer_update.connect(self.board.taskInterface.focusPanel.update_Timer)
-        self.p.taskUI_task_end.connect(self.board.taskInterface.focusPanel.taskFinished)
-        self.p.single_pomo_done.connect(self.board.taskInterface.focusPanel.single_pomo_done)
+        self.conp.taskInterface.focusPanel.start_pomodoro.connect(self.p.run_tomato)
+        self.conp.taskInterface.focusPanel.cancel_pomodoro.connect(self.p.cancel_tomato)
+        self.conp.taskInterface.focusPanel.start_focus.connect(self.p.run_focus)
+        self.conp.taskInterface.focusPanel.cancel_focus.connect(self.p.cancel_focus)
+        self.p.taskUI_Timer_update.connect(self.conp.taskInterface.focusPanel.update_Timer)
+        self.p.taskUI_task_end.connect(self.conp.taskInterface.focusPanel.taskFinished)
+        self.p.single_pomo_done.connect(self.conp.taskInterface.focusPanel.single_pomo_done)
 
         # Midnight Trigger
         self.date_changed.connect(self.p._mightEventTrigger)

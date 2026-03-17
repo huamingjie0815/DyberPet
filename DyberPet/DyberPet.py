@@ -365,6 +365,7 @@ class PetWidget(QWidget):
     show_controlPanel = Signal(name='show_controlPanel')
 
     show_dashboard = Signal(name='show_dashboard')
+    show_chat = Signal(name='show_chat')
     hp_updated = Signal(int, name='hp_updated')
     fv_updated = Signal(int, int, name='fv_updated')
 
@@ -1006,6 +1007,7 @@ class PetWidget(QWidget):
             #Action(FIF.MENU, self.tr('More Options'), triggered=self._show_right_menu),
             Action(QIcon(os.path.join(basedir,'res/icons/dashboard.svg')), self.tr('Dashboard'), triggered=self._show_dashboard),
             Action(QIcon(os.path.join(basedir,'res/icons/SystemPanel.png')), self.tr('System'), triggered=self._show_controlPanel),
+            Action(FIF.CHAT, self.tr('Chat'), triggered=self._show_chat),
         ])
         self.StatMenu.addSeparator()
 
@@ -1574,6 +1576,9 @@ class PetWidget(QWidget):
 
     def _show_dashboard(self):
         self.show_dashboard.emit()
+
+    def _show_chat(self):
+        self.show_chat.emit()
 
     '''
     def show_compday(self):

@@ -5,7 +5,7 @@ from sys import platform
 from collections import defaultdict
 
 from PySide6.QtGui import QImage, QPixmap
-from DyberPet.conf import PetData, TaskData, ActData, ItemData
+from DyberPet.conf import PetData, TaskData, ActData
 from PySide6 import QtCore
 
 if platform == 'win32':
@@ -90,11 +90,9 @@ SPEED_DECAY = 0.5
 AUTOFEED_THRESHOLD = 60
 
 def init():
-    # computer system ==================================================
     global platform
     platform = platform
 
-    # check if data directory exists ===================================
     newpath = os.path.join(configdir, 'data')
     if not os.path.exists(newpath):
         os.makedirs(newpath)
@@ -102,7 +100,6 @@ def init():
     global pet_conf
     pet_conf = None
 
-    # Image and animation related variable =============================
     global current_img, previous_img
     # Make img-to-show a global variable for multi-thread behaviors
     current_img = None #QPixmap()
@@ -149,28 +146,22 @@ def init():
     HP_stop = False
     FV_stop = False
 
-    # sound volumn =====================================================
     global volume
     volume = 0.4
 
-    # pet name =========================================================
     global petname
     petname = ''
 
-    # which screen =====================================================
     global screens, current_screen
     screens = []
     current_screen = None
 
-    # Always on top ====================================================
     global on_top_hint, pets
     on_top_hint = True
 
-    # Translations ====================================================
     global lang_dict
     lang_dict = json.load(open(os.path.join(basedir, 'res/language/language.json'), 'r', encoding='UTF-8'))
 
-    # Settings =========================================================
     pets = get_petlist(os.path.join(basedir, 'res/role'))
     init_settings()
     global default_pet
@@ -186,26 +177,19 @@ def init():
     global focus_timer_on
     focus_timer_on = False
 
-    # Load in pet data ================================================
     global pet_data 
     pet_data = PetData(pets)
 
-    # Load in task data ================================================
     global task_data 
     task_data = TaskData()
 
-    # Init animation config data ================================================
     global act_data 
     act_data = ActData(pets)
 
-    # Load in Language Choice ==========================================
     global language_code, translator
     change_translator(language_code)
 
-    # Load in items data ==========================================
-    global items_data, required_item
-    items_data = None
-    required_item = None
+    # items_data, required_item removed in lite version
 
 
 
@@ -241,7 +225,6 @@ def init_settings():
 
         fixdragspeedx, fixdragspeedy = data_params['fixdragspeedx'], data_params['fixdragspeedy']
         gravity = data_params['gravity']
-        #tunable_scale = data_params['tunable_scale']
         volume = data_params['volume']
         language_code = data_params.get('language_code', QtCore.QLocale().name())
         on_top_hint = data_params.get('on_top_hint', True)
@@ -249,7 +232,6 @@ def init_settings():
         defaultAct = data_params.get('defaultAct', {})
         themeColor = data_params.get('themeColor', None)
 
-        # Fix a bug version distributed to users =============
         if defaultAct is None:
             defaultAct = {}
         elif type(defaultAct) == str:
@@ -259,21 +241,18 @@ def init_settings():
             defaultAct[pet] = defaultAct.get(pet, None)
         #=====================================================
 
-        # update for app <= v0.2.2 ===========================
         if language_code == 'CN':
             language_code = QtCore.QLocale().name()
         #=====================================================
 
-        # v0.4.8 update ======================================
         global set_fall
         set_fall = data_params.get('set_fall', True)
         #=====================================================
 
-        # v0.5.0 update ======================================
-        # First time open v0.5.0, get the original 
+        # v0.5.0
         # tunable_scale as all default
         tunable_scale = data_params.get('tunable_scale', 1.0)
-        # v0.5.0 tunable_scales are specified for each character
+        # v0.5.0
         scale_dict_tmp = data_params.get('scale_dict', {})
         scale_dict = {}
         for pet in pets:
@@ -295,22 +274,22 @@ def init_settings():
             minipet_scale[minipet] = check_dict_datatype(sdict, float, 1.0)
         #=====================================================
 
-        # v0.5.3 Toaster can be turned off
+        # v0.5.3
         toaster_on = data_params.get('toaster_on', True)
         #=====================================================
 
-        # v0.6.1 User Tag (how pet will call the user)
+        # v0.6.1
         usertag_dict_tmp = data_params.get('usertag_dict', {})
         usertag_dict = {}
         for pet in pets:
             usertag = usertag_dict_tmp.get(pet, '')
             usertag_dict[pet] = usertag
 
-        # v0.6.5 stop HP & FV changes when screen locked
+        # v0.6.5
         auto_lock = data_params.get('auto_lock', False)
         #=====================================================
 
-        # v0.6.7 Bubble can be turned off
+        # v0.6.7
         bubble_on = data_params.get('bubble_on', True)
         #=====================================================
 
@@ -366,8 +345,6 @@ def save_settings():
 def get_petlist(dirname):
     folders = os.listdir(dirname)
     pets = []
-    # subpets = []
-    # v0.3.3 subpet now moved to folder: res/pet/
     for folder in folders:
         folder_path = os.path.join(dirname, folder)
         if folder != 'sys' and os.path.isdir(folder_path):

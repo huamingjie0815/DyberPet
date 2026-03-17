@@ -553,7 +553,6 @@ class PetWidget(QWidget):
             
 
             event.accept()
-            #print(self.pos().x(), self.pos().y())
 
     def mouseReleaseEvent(self, event):
         """
@@ -567,7 +566,6 @@ class PetWidget(QWidget):
             #self.setCursor(QCursor(Qt.ArrowCursor))
             self.setCursor(self.cursor_default)
 
-            #print(self.mouse_moving, settings.onfloor)
             if settings.onfloor == 1 and not self.mouse_moving:
                 self.patpat()
 
@@ -907,93 +905,91 @@ class PetWidget(QWidget):
         # self.statLabel = CaptionLabel(statusText, self)
         # setFont(self.statLabel, 14, QFont.Normal)
 
+        # 精简版: 移除等级显示
         # Level Badge
-        lvlWidget = QWidget()
-        h_box0 = QHBoxLayout(lvlWidget)
-        h_box0.setContentsMargins(0,0,0,0)
-        h_box0.setSpacing(5)
-        h_box0.setAlignment(Qt.AlignCenter)
-        lvlLable = CaptionLabel(self.tr("Level"))
-        setFont(lvlLable, 13, QFont.Normal)
-        lvlLable.adjustSize()
-        lvlLable.setFixedSize(43, lvlLable.height())
-        self.lvl_badge = LevelBadge(settings.pet_data.fv_lvl)
-        h_box0.addWidget(lvlLable)
-        #h_box0.addStretch(1)
-        h_box0.addWidget(self.lvl_badge)
-        h_box0.addStretch(1)
-        lvlWidget.setFixedSize(250, 25)
+        # lvlWidget = QWidget()
+        # h_box0 = QHBoxLayout(lvlWidget)
+        # h_box0.setContentsMargins(0,0,0,0)
+        # h_box0.setSpacing(5)
+        # h_box0.setAlignment(Qt.AlignCenter)
+        # lvlLable = CaptionLabel(self.tr("Level"))
+        # setFont(lvlLable, 13, QFont.Normal)
+        # lvlLable.adjustSize()
+        # lvlLable.setFixedSize(43, lvlLable.height())
+        # self.lvl_badge = LevelBadge(settings.pet_data.fv_lvl)
+        # h_box0.addWidget(lvlLable)
+        # h_box0.addWidget(self.lvl_badge)
+        # h_box0.addStretch(1)
+        # lvlWidget.setFixedSize(250, 25)
 
+        # 精简版: 移除饱食度和好感度进度条
         # Hunger status
-        hpWidget = QWidget()
-        h_box1 = QHBoxLayout(hpWidget)
-        h_box1.setContentsMargins(0,0,0,0) #status_margin,0,0)
-        h_box1.setSpacing(5)
-        h_box1.setAlignment(Qt.AlignCenter) #AlignBottom | Qt.AlignHCenter)
-        hpLable = CaptionLabel(self.tr("Satiety"))
-        setFont(hpLable, 13, QFont.Normal)
-        hpLable.adjustSize()
-        hpLable.setFixedSize(43, hpLable.height())
-        self.hpicon = QLabel(self)
-        self.hpicon.setFixedSize(icons_wh,icons_wh)
-        image = QPixmap()
-        image.load(os.path.join(basedir, 'res/icons/HP_icon.png'))
-        self.hpicon.setScaledContents(True)
-        self.hpicon.setPixmap(image)
-        self.hpicon.setAlignment(Qt.AlignCenter) #AlignBottom | Qt.AlignRight)
-        h_box1.addWidget(hpLable)
-        h_box1.addStretch(1)
-        h_box1.addWidget(self.hpicon)
-        #h_box1.addStretch(1)
-        self.pet_hp = DP_HpBar(self, minimum=0, maximum=100, objectName='PetHP')
-        self.pet_hp.hp_updated.connect(self._hp_updated)
-        h_box1.addWidget(self.pet_hp)
-        h_box1.addStretch(1)
+        # hpWidget = QWidget()
+        # h_box1 = QHBoxLayout(hpWidget)
+        # h_box1.setContentsMargins(0,0,0,0)
+        # h_box1.setSpacing(5)
+        # h_box1.setAlignment(Qt.AlignCenter)
+        # hpLable = CaptionLabel(self.tr("Satiety"))
+        # setFont(hpLable, 13, QFont.Normal)
+        # hpLable.adjustSize()
+        # hpLable.setFixedSize(43, hpLable.height())
+        # self.hpicon = QLabel(self)
+        # self.hpicon.setFixedSize(icons_wh,icons_wh)
+        # image = QPixmap()
+        # image.load(os.path.join(basedir, 'res/icons/HP_icon.png'))
+        # self.hpicon.setScaledContents(True)
+        # self.hpicon.setPixmap(image)
+        # self.hpicon.setAlignment(Qt.AlignCenter)
+        # h_box1.addWidget(hpLable)
+        # h_box1.addStretch(1)
+        # h_box1.addWidget(self.hpicon)
+        # self.pet_hp = DP_HpBar(self, minimum=0, maximum=100, objectName='PetHP')
+        # self.pet_hp.hp_updated.connect(self._hp_updated)
+        # h_box1.addWidget(self.pet_hp)
+        # h_box1.addStretch(1)
 
-        # favor status
-        fvWidget = QWidget()
-        h_box2 = QHBoxLayout(fvWidget)
-        h_box2.setContentsMargins(0,0,0,0) #status_margin,0,0)
-        h_box2.setSpacing(5)
-        h_box2.setAlignment(Qt.AlignCenter) #Qt.AlignBottom | Qt.AlignHCenter)
-        fvLable = CaptionLabel(self.tr("Favor"))
-        setFont(fvLable, 13, QFont.Normal)
-        fvLable.adjustSize()
-        fvLable.setFixedSize(43, fvLable.height())
-        self.emicon = QLabel(self)
-        self.emicon.setFixedSize(icons_wh,icons_wh)
-        image = QPixmap()
-        image.load(os.path.join(basedir, 'res/icons/Fv_icon.png'))
-        self.emicon.setScaledContents(True)
-        self.emicon.setPixmap(image)
-        #self.emicon.setAlignment(Qt.AlignBottom | Qt.AlignRight)
-        h_box2.addWidget(fvLable, Qt.AlignHCenter | Qt.AlignTop)
-        h_box2.addStretch(1)
-        h_box2.addWidget(self.emicon)
-        self.pet_fv = DP_FvBar(self, minimum=0, maximum=100, objectName='PetEM')
-        self.pet_fv.fv_updated.connect(self._fv_updated)
-
-        self.pet_hp.hptier_changed.connect(self.hpchange)
-        self.pet_fv.fvlvl_changed.connect(self.fvchange)
-        h_box2.addWidget(self.pet_fv)
-        h_box2.addStretch(1)
-
-        self.pet_hp.init_HP(settings.pet_data.hp, sys_hp_interval) #2)
-        self.pet_fv.init_FV(settings.pet_data.fv, settings.pet_data.fv_lvl)
-        self.pet_hp.setFixedSize(145, 15)
-        self.pet_fv.setFixedSize(145, 15)
+        # # favor status
+        # fvWidget = QWidget()
+        # h_box2 = QHBoxLayout(fvWidget)
+        # h_box2.setContentsMargins(0,0,0,0)
+        # h_box2.setSpacing(5)
+        # h_box2.setAlignment(Qt.AlignCenter)
+        # fvLable = CaptionLabel(self.tr("Favor"))
+        # setFont(fvLable, 13, QFont.Normal)
+        # fvLable.adjustSize()
+        # fvLable.setFixedSize(43, fvLable.height())
+        # self.emicon = QLabel(self)
+        # self.emicon.setFixedSize(icons_wh,icons_wh)
+        # image = QPixmap()
+        # image.load(os.path.join(basedir, 'res/icons/Fv_icon.png'))
+        # self.emicon.setScaledContents(True)
+        # self.emicon.setPixmap(image)
+        # h_box2.addWidget(fvLable, Qt.AlignHCenter | Qt.AlignTop)
+        # h_box2.addStretch(1)
+        # h_box2.addWidget(self.emicon)
+        # self.pet_fv = DP_FvBar(self, minimum=0, maximum=100, objectName='PetEM')
+        # self.pet_fv.fv_updated.connect(self._fv_updated)
+        # self.pet_hp.hptier_changed.connect(self.hpchange)
+        # self.pet_fv.fvlvl_changed.connect(self.fvchange)
+        # h_box2.addWidget(self.pet_fv)
+        # h_box2.addStretch(1)
+        # self.pet_hp.init_HP(settings.pet_data.hp, sys_hp_interval)
+        # self.pet_fv.init_FV(settings.pet_data.fv, settings.pet_data.fv_lvl)
+        # self.pet_hp.setFixedSize(145, 15)
+        # self.pet_fv.setFixedSize(145, 15)
 
         # Status Widget
         self.statusWidget = QWidget()
         StatVbox = QVBoxLayout(self.statusWidget)
         StatVbox.setContentsMargins(0,5,30,10)
         StatVbox.setSpacing(5)
-        
+
         #StatVbox.addWidget(self.statusTitle, Qt.AlignVCenter)
         StatVbox.addStretch(1)
         #StatVbox.addWidget(self.daysLabel)
-        StatVbox.addWidget(hpWidget, Qt.AlignLeft | Qt.AlignVCenter)
-        StatVbox.addWidget(fvWidget, Qt.AlignLeft | Qt.AlignVCenter)
+        # 精简版: 不再显示HP/FV状态
+        # StatVbox.addWidget(hpWidget, Qt.AlignLeft | Qt.AlignVCenter)
+        # StatVbox.addWidget(fvWidget, Qt.AlignLeft | Qt.AlignVCenter)
         StatVbox.addStretch(1)
         #statusWidget.setLayout(StatVbox)
         #statusWidget.setContentsMargins(0,0,0,0)
@@ -1003,10 +999,11 @@ class PetWidget(QWidget):
         self.StatMenu.addWidget(self.statusTitle, selectable=False)
         self.StatMenu.addSeparator()
         #self.StatMenu.addWidget(self.statLabel, selectable=False)
-        self.StatMenu.addWidget(lvlWidget, selectable=False)
-        self.StatMenu.addWidget(self.statusWidget, selectable=False)
+        # 精简版: 移除等级显示
+        # self.StatMenu.addWidget(lvlWidget, selectable=False)
+        # self.StatMenu.addWidget(self.statusWidget, selectable=False)
         #self.StatMenu.addWidget(fvbar, selectable=False)
-        self.StatMenu.addSeparator()
+        # self.StatMenu.addSeparator()
 
         #self.StatMenu.addMenu(self.menu)
         self.StatMenu.addActions([
@@ -1347,7 +1344,6 @@ class PetWidget(QWidget):
         :param img: 图片
         :return:
         """
-        #print(settings.previous_anchor, settings.current_anchor)
         if settings.previous_anchor != settings.current_anchor:
             self.move(self.pos().x()-settings.previous_anchor[0]+settings.current_anchor[0],
                       self.pos().y()-settings.previous_anchor[1]+settings.current_anchor[1])
@@ -1592,7 +1588,6 @@ class PetWidget(QWidget):
 
         elif prob_num_0 > sys_pp_item:
             self.addItem_toInven.emit(1, [])
-            #print('物品掉落！')
 
         if prob_num_0 > sys_pp_audio:
             #随机语音
@@ -1798,7 +1793,6 @@ class PetWidget(QWidget):
             self.inventory_window.move(max(self.current_screen.topLeft().y(), self.pos().x()-self.inventory_window.width()//2),
                                     max(self.current_screen.topLeft().y(), self.pos().y()-self.inventory_window.height()))
             self.inventory_window.show()
-            #print(self.inventory_window.size())
 
     '''
     def show_settings(self):
@@ -1849,21 +1843,24 @@ class PetWidget(QWidget):
 
 
     def hpchange(self, hp_tier, direction):
-        self.workers['Animation'].hpchange(hp_tier, direction)
-        self.hptier_changed_main_note.emit(hp_tier, direction)
-        #self._update_statusTitle(hp_tier)
+        # 精简版: 饱食度变化不再触发任何操作
+        pass
+        # self.workers['Animation'].hpchange(hp_tier, direction)
+        # self.hptier_changed_main_note.emit(hp_tier, direction)
 
     def fvchange(self, fv_lvl):
-        if fv_lvl == -1:
-            self.fvlvl_changed_main_note.emit(fv_lvl)
-        else:
-            self.workers['Animation'].fvchange(fv_lvl)
-            self.fvlvl_changed_main_note.emit(fv_lvl)
-            self.fvlvl_changed_main_inve.emit(fv_lvl)
-            self._update_fvlock()
-            self.lvl_badge.set_level(fv_lvl)
-        self.refresh_acts.emit()
-        self.bubble_manager.trigger_bubble(bb_type="fv_lvlup")
+        # 精简版: 好感度变化不再触发任何操作
+        pass
+        # if fv_lvl == -1:
+        #     self.fvlvl_changed_main_note.emit(fv_lvl)
+        # else:
+        #     self.workers['Animation'].fvchange(fv_lvl)
+        #     self.fvlvl_changed_main_note.emit(fv_lvl)
+        #     self.fvlvl_changed_main_inve.emit(fv_lvl)
+        #     self._update_fvlock()
+        #     self.lvl_badge.set_level(fv_lvl)
+        # self.refresh_acts.emit()
+        # self.bubble_manager.trigger_bubble(bb_type="fv_lvlup")
 
     def runInteraction(self):
         # Create thread for Interaction Module
@@ -1910,7 +1907,6 @@ class PetWidget(QWidget):
 
     def _move_customized(self, plus_x, plus_y):
 
-        #print(act_list)
         #direction, frame_move = str(act_list[0]), float(act_list[1])
         pos = self.pos()
         new_x = pos.x() + plus_x

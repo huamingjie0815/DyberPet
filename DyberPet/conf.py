@@ -94,14 +94,11 @@ class PetConfig:
             o.refresh = conf_params.get('refresh', 5)
             o.interact_speed = conf_params.get('interact_speed', 0.02) * 1000
             o.dropspeed = conf_params.get('dropspeed', 1.0) #not needed in v0.15+
-            #o.gravity = conf_params.get('gravity', 4.0)
 
-            # 
             # 初始化所有动作
             act_path = os.path.join(basedir, 'res/role/{}/act_conf.json'.format(pet_name))
             act_conf = dict(json.load(open(act_path, 'r', encoding='UTF-8')))
             act_dict = {}
-            #with open(act_path, 'r', encoding='UTF-8') as f:
             act_dict = {k: Act.init_act(v, pic_dict, o.scale, pet_name, 'role', k) for k, v in act_conf.items()}
             o.act_dict = act_dict
             # 载入默认动作
@@ -130,13 +127,6 @@ class PetConfig:
             o.patpat = dict([(i, act_dict[pat_conf[i]]) for i in range(num_hp_states)])
 
             # subpet now is independent from character
-            '''
-            subpet = conf_params.get('subpet', {})
-            for name in subpet:
-                subpet[name]['fv_lock'] = subpet[name].get('fv_lock',0)
-
-            o.subpet = subpet
-            '''
 
             
             # 初始化随机动作
@@ -184,7 +174,6 @@ class PetConfig:
             o.custom_act = {}
 
             # 如果是附属宠物 其和主宠物之间的交互 - v0.3.3 subpet loading switched to another method
-            #o.main_interact = conf_params.get("main_interact", {})
 
             o.item_favorite = conf_params.get('item_favorite', {})
             o.item_dislike = conf_params.get('item_dislike', {})
@@ -229,10 +218,7 @@ class PetConfig:
 
             o.petname = 'sys'
             o.scale = conf_params.get('scale', 1.0)
-            #o.width = conf_params.get('width', 128) * o.scale
-            #o.height = conf_params.get('height', 128) * o.scale
 
-            # 
             # 初始化所有动作
             act_path = os.path.join(basedir, 'res/role/sys/act_conf.json')
             act_conf = dict(json.load(open(act_path, 'r', encoding='UTF-8')))
@@ -256,16 +242,6 @@ class PetConfig:
             o.acc_name = acc_name
 
             # 鼠标挂件 - 暂时搁置
-            '''
-            mouseDecor = {}
-            for Decor_array in conf_params.get("mouseDecor", []):
-                Decor_array['default'] = [act_dict[act] for act in Decor_array['default']]
-                Decor_array['click'] = [act_dict[act] for act in Decor_array['click']]
-                #Decor_array['anchor'] = [i*o.scale for i in Decor_array['anchor']]
-                mouseDecor[Decor_array['name']] = Decor_array
-
-            o.mouseDecor = mouseDecor
-            '''
 
             return o
 
@@ -313,7 +289,6 @@ class PetConfig:
                 pat_conf = dict([(i, 'default') for i in range(num_hp_states)])
 
             o.patpat = dict([(i, act_dict[pat_conf[i]]) for i in range(num_hp_states)])
-            #o.patpat = act_dict[conf_params.get('patpat', 'default')]
 
             # Subpet position arguments
             o.follow_main_x = conf_params.get('follow_main_x', True)
@@ -735,21 +710,23 @@ class ActData:
 
 class PetData:
     """
-    宠物数据创建、读取、存储
+    宠物数据创建、读取、存储 (精简版)
+    仅保留: current_pet, days, last_opened
     """
 
     def __init__(self, petsList):
 
-        #self.petname = pet_name
+        self.frozen_data = False
+
+        # 精简版: 添加stub属性以兼容旧代码
         self.hp = 100
         self.hp_tier = 3
         self.fv = 0
         self.fv_lvl = 0
         self.items = {}
         self.coins = 0
-        self.frozen_data = False
 
-        self.file_path = os.path.join(configdir, 'data/pet_data.json') #%(self.petname)
+        self.file_path = os.path.join(configdir, 'data/pet_data.json')
         self.petsList = petsList
         self.current_pet = petsList[0]
 
@@ -763,106 +740,66 @@ class PetData:
                 allData_params = json.load(open(self.file_path, 'r', encoding='UTF-8'))
                 self.saveGood = True
             except:
-                #File broken (seen by a few users)
+                # File broken
                 allData_params = {}
                 self.saveGood = False
 
-
-            if self.current_pet in allData_params.keys():
-                # Already the new version save structure
-                pass
-
-            elif 'HP' in allData_params.keys():
-                # Still the old version of save structure
-                new_allData_params = {}
-                for pet in self.petsList:
-                    new_allData_params[pet] = allData_params.copy()
-
-                allData_params = new_allData_params
-
-            else:
-                # Already the new version save structure, but pet first loaded
-                now = datetime.now()
-                allData_params[self.current_pet] = {'HP':-1, 'HP_tier':3,
-                                                    'FV':0, 'FV_lvl':0,
-                                                    'fv_sys_ver':'v2',
-                                                    'items':{},
-                                                    'coins':0,
-                                                    'days':1,
-                                                    'last_opened': '%i-%i-%i'%(now.year, now.month, now.day)}
-
-        
+            if self.current_pet not in allData_params.keys():
+                # 需要迁移旧数据或创建新数据
+                allData_params = self._migrate_to_lite(allData_params)
         else:
             # First time using the App
             self.saveGood = True
             allData_params = {}
             now = datetime.now()
             for pet in self.petsList:
-                allData_params[pet] = {'HP':-1, 'HP_tier':3,
-                                        'FV':0, 'FV_lvl':0,
-                                        'fv_sys_ver':'v2',
-                                        'items':{},
-                                        'coins':0,
-                                        'days':1,
-                                        'last_opened': '%i-%i-%i'%(now.year, now.month, now.day)}
-            
+                allData_params[pet] = self._create_default_data()
+
         data_params = allData_params[self.current_pet]
-        data_params = self._check_coins(data_params)
-        data_params = self._check_items(data_params)
-        data_params = self._check_fvsys(data_params)
-        self.hp = data_params['HP']
-        self.hp_tier = data_params['HP_tier']
-        self.fv = data_params['FV']
-        self.fv_lvl = data_params['FV_lvl']
-        self.items = data_params['items']
-        self.coins = data_params['coins']
-        self.days, self.last_opened = self._sumDays(data_params)
-        data_params['days'] = self.days
-        data_params['last_opened'] = self.last_opened
+        self.days = data_params['days']
+        self.last_opened = data_params['last_opened']
         allData_params[self.current_pet] = data_params.copy()
 
         self.allData_params = allData_params
 
         self.save_data()
-        self.value_type = { key: type(data_params[key]) for key in data_params.keys() }
-        self.value_type.pop('fv_sys_ver')
+        self.value_type = {key: type(data_params[key]) for key in data_params.keys()}
 
-    def _check_coins(self, data_params):
-        if 'coins' not in data_params:
-            data_params['coins'] = 0
-        return data_params
-    
-    def _check_items(self, data_params):
-        new_item_params = {}
-        new_idx = 1
-        for item, value in data_params['items'].copy().items():
-            if type(value) == int:
-                # old version save data
-                idx = new_idx
-                num = value
-            else:
-                # new version save data
-                idx, num = value[0], value[1]
+    def _create_default_data(self):
+        """创建默认数据"""
+        now = datetime.now()
+        return {
+            'days': 1,
+            'last_opened': '%i-%i-%i' % (now.year, now.month, now.day)
+        }
 
-            if num <= 0: # remove any non-exist items
-                continue
-            new_idx += 1
-            new_item_params[item] = (idx, num)
-        data_params['items'] = new_item_params
-        return data_params
-    
-    def _check_fvsys(self, data_params):
-        fv_version = data_params.get('fv_sys_ver', 'v1')
-        if fv_version == 'v1':
-            print('version 1 detected!')
-            fv_lvl, fv = convert_fv_versions(data_params['FV'], data_params['FV_lvl'], LVL_BAR_V1, LVL_BAR)
-            data_params['FV'] = fv
-            data_params['FV_lvl'] = fv_lvl
-            data_params['fv_sys_ver'] = 'v2'
-        return data_params
+    def _migrate_to_lite(self, old_data: dict) -> dict:
+        """迁移到精简版，丢弃HP/FV/物品/金币数据"""
+        new_data = {}
+        now = datetime.now()
+        default_data = self._create_default_data()
+
+        # 检查是否是旧版本格式 (包含HP字段)
+        if 'HP' in old_data.keys():
+            # 旧版本 - 需要为每个宠物创建新数据
+            for pet in self.petsList:
+                new_data[pet] = default_data.copy()
+        else:
+            # 新版本但缺少当前宠物
+            for pet in self.petsList:
+                if pet in old_data.keys():
+                    # 保留days和last_opened，丢弃其他
+                    new_data[pet] = {
+                        'days': old_data[pet].get('days', 1),
+                        'last_opened': old_data[pet].get('last_opened', '%i-%i-%i' % (now.year, now.month, now.day))
+                    }
+                else:
+                    new_data[pet] = default_data.copy()
+
+        return new_data
 
     def _sumDays(self, data_params):
-        if 'days' in data_params:
+        if 'days' in data_params and 'last_opened' in data_params:
             days = data_params['days']
             now = datetime.now()
             lp = data_params['last_opened'].split('-')
@@ -871,14 +808,12 @@ class PetData:
             if (now - last_opened).days == 0:
                 # 同一天重复打开
                 days = days
-                last_opened = '%i-%i-%i'%(now.year, now.month, now.day)
+                last_opened = '%i-%i-%i' % (now.year, now.month, now.day)
             else:
                 days = days + 1
-                last_opened = '%i-%i-%i'%(now.year, now.month, now.day)
-
-
-        # 早已使用 但初次统计陪伴时间
+                last_opened = '%i-%i-%i' % (now.year, now.month, now.day)
         else:
+            # 初次统计陪伴时间
             ct = os.path.getctime(self.file_path)
             ct = time.strptime(time.ctime(ct))
             ct = time.strftime("%Y-%m-%d", ct).split('-')
@@ -888,111 +823,24 @@ class PetData:
                           hour=now.hour, minute=now.minute, second=now.second)
             time_diff = now - ct
             days = time_diff.days + 1
-            last_opened = '%i-%i-%i'%(now.year, now.month, now.day)
+            last_opened = '%i-%i-%i' % (now.year, now.month, now.day)
 
         return days, last_opened
-
 
     def _change_pet(self, current_pet):
         self.current_pet = current_pet
 
         if current_pet not in self.allData_params.keys():
             now = datetime.now()
-            self.allData_params[self.current_pet] = {'HP':-1, 'HP_tier':3,
-                                                'FV':0, 'FV_lvl':0,
-                                                'fv_sys_ver':'v2',
-                                                'items':{},
-                                                'coins':0,
-                                                'days':1,
-                                                'last_opened': '%i-%i-%i'%(now.year, now.month, now.day)}
+            self.allData_params[self.current_pet] = self._create_default_data()
 
         data_params = self.allData_params[self.current_pet]
-        data_params = self._check_coins(data_params)
-        data_params = self._check_items(data_params)
-        data_params = self._check_fvsys(data_params)
-        self.hp = data_params['HP']
-        self.hp_tier = data_params['HP_tier']
-        self.fv = data_params['FV']
-        self.fv_lvl = data_params['FV_lvl']
-        self.items = data_params['items']
-        self.coins = data_params['coins']
         self.days, self.last_opened = self._sumDays(data_params)
         data_params['days'] = self.days
         data_params['last_opened'] = self.last_opened
         self.allData_params[self.current_pet] = data_params.copy()
 
         self.save_data()
-
-
-    def change_hp(self, hp_value, hp_tier=None):
-        if self.frozen_data:
-            return
-
-        self.hp = hp_value
-        if hp_tier is not None:
-            self.hp_tier = int(hp_tier)
-
-        self.allData_params[self.current_pet]['HP'] = self.hp
-        self.allData_params[self.current_pet]['HP_tier'] = self.hp_tier
-
-        self.save_data()
-
-    def change_fv(self, fv_value, fv_lvl=None):
-        if self.frozen_data:
-            return
-
-        self.fv = fv_value
-        if fv_lvl is not None:
-            self.fv_lvl = fv_lvl
-
-        self.allData_params[self.current_pet]['FV'] = self.fv
-        self.allData_params[self.current_pet]['FV_lvl'] = self.fv_lvl
-        self.save_data()
-    
-    def change_coin(self, value_change):
-        if self.frozen_data:
-            return
-
-        self.coins += value_change
-        self.allData_params[self.current_pet]['coins'] = self.coins
-        self.save_data()
-
-    def change_item(self, item, item_change=None, item_num=None, item_index=None):
-        if self.frozen_data:
-            return
-
-        if item in self.items.keys():
-            new_num = self.items[item][1] + item_change if item_change else item_num
-            item_index = self.items[item][0]
-        else:
-            item_index = item_index
-            new_num = item_change if item_change else item_num
-
-        if new_num <= 0:
-            self.items.pop(item)
-        else:
-            self.items[item] = (item_index, new_num)
-
-        self.allData_params[self.current_pet]['items'] = self.items
-        self.save_data()
-
-    def update_item_indices(self, item_names, item_indices):
-        if self.frozen_data:
-            return
-        
-        for item, idx in zip(item_names, item_indices):
-            self._update_item_index(item, idx)
-        
-        self.allData_params[self.current_pet]['items'] = self.items
-        self.save_data()
-
-    def _update_item_index(self, item, new_index):
-        if self.frozen_data:
-            return
-        
-        if item in self.items.keys():
-            self.items[item] = (new_index, self.items[item][1])
-            self.allData_params[self.current_pet]['items'] = self.items
 
     def update_date(self):
         self.days, self.last_opened = self._sumDays(self.allData_params[self.current_pet])
@@ -1007,70 +855,32 @@ class PetData:
         with open(self.file_path, 'w', encoding='utf-8') as f:
             json.dump(self.allData_params, f, ensure_ascii=False, indent=4)
 
+    def check_save_integrity(self, save_allDict, petname):
+        """检查存档完整性"""
+        required_keys = {'days', 'last_opened'}
 
-    def check_save_integrity(self, save_allDict, petname): #, days_info=False):
-
-        if 'HP' in save_allDict:
-            # Save to import is from old version
-            save_dict = save_allDict
-            try:
-                check_key_value = all( key in save_dict and isinstance(save_dict[key], self.value_type[key]) for key in self.value_type.keys() )
-            except:
-                return 0
-            if check_key_value:
-                return 1
-            else:
-                return 0
-
-        else:
-            # Save to import is from new version
-            if petname == 'all':
-                for pet, save_dict in save_allDict.items():
-                    try:
-                        check_key_value = all( key in save_dict and isinstance(save_dict[key], self.value_type[key]) for key in self.value_type.keys() )
-                    except:
-                        return 0
-                    if check_key_value:
-                        continue
-                    else:
-                        return 0
-                return 1
-            else:
-                save_dict = save_allDict.get(petname, None)
-                if save_dict is None:
+        if petname == 'all':
+            for pet, save_dict in save_allDict.items():
+                if not required_keys.issubset(save_dict.keys()):
                     return 0
-                else:
-                    try:
-                        check_key_value = all( key in save_dict and isinstance(save_dict[key], self.value_type[key]) for key in self.value_type.keys() )
-                    except:
-                        return 0
-                    if check_key_value:
-                        return 1
-                    else:
-                        return 0
-
+            return 1
+        else:
+            save_dict = save_allDict.get(petname, None)
+            if save_dict is None:
+                return 0
+            return 1 if required_keys.issubset(save_dict.keys()) else 0
 
     def transfer_save(self, save_allDict, petname, days_info=False):
-
+        """导入存档"""
         try:
-            if 'HP' in save_allDict:
-                # Save to import is from old version
-                save_dict = save_allDict
-                if petname == 'all':
-                    for pet in self.allData_params.keys():
-                        self.transfer_save_toPet(save_dict, pet)
-                else:
-                    self.transfer_save_toPet(save_dict, petname)
+            if petname == 'all':
+                for pet, save_dict in save_allDict.items():
+                    self._transfer_save_toPet(save_dict, pet)
             else:
-                # Save to import is from new version
-                if petname == 'all':
-                    for pet, save_dict in save_allDict.items():
-                        self.transfer_save_toPet(save_dict, pet)
-                else:
-                    save_dict = save_allDict.get(petname, None) #[petname]
-                    if not save_dict:
-                        return 0
-                    self.transfer_save_toPet(save_dict, petname)
+                save_dict = save_allDict.get(petname, None)
+                if not save_dict:
+                    return 0
+                self._transfer_save_toPet(save_dict, petname)
         except:
             return 0
 
@@ -1078,11 +888,11 @@ class PetData:
             json.dump(self.allData_params, f, ensure_ascii=False, indent=4)
         return 1
 
-    def transfer_save_toPet(self, data_params, petname):
-
-        data_params = self._check_coins(data_params)
-        data_params = self._check_items(data_params)
-        data_params = self._check_fvsys(data_params)
+    def _transfer_save_toPet(self, data_params, petname):
+        """将数据转移到指定宠物"""
+        if petname in self.allData_params.keys():
+            self.allData_params[petname]['days'] = data_params.get('days', 1)
+            self.allData_params[petname]['last_opened'] = data_params.get('last_opened', '')
 
         if petname not in self.allData_params.keys():
             self.allData_params[petname] = data_params.copy()
@@ -1249,322 +1059,19 @@ class TaskData:
         self.taskData['history'][-1] = (date_str, newVal)
 
 
-
+# 精简版: 物品系统已移除，提供空类和函数避免导入错误
 
 
 class ItemData:
-    """
-    物品数据的读取
-    """
+    """物品数据 (精简版 - 已移除)"""
 
     def __init__(self, HUNGERSTR='Satiety', FAVORSTR='Favorability'):
-
-        #self.file_path = os.path.join(basedir, 'res/items/items_config.json')
         self.item_dict = {}
-        #self.item_conf = dict(json.load(open(self.file_path, 'r', encoding='UTF-8')))
         self.reward_dict = {}
-        self.HUNGERSTR = HUNGERSTR
-        self.FAVORSTR = FAVORSTR
-        #self.MODs = []
-        self.coin = {}
-        self.init_data()
+        self.coin = {'name': {'default': 'Coin'}, 'image': None}
         self.default_coin = self.coin.copy()
 
 
-    def init_data(self):
-        #print("check")
-        """ Load in all the item MOD """
-        '''
-        If one item name appears in more than 1 MOD, latest MOD will overwrite old ones
-        '''
-
-        # Load in all the MODs
-        #self.item_dict = {k: self.init_item(v, k) for k, v in self.item_conf.items()}
-        itemMods = get_child_folder(os.path.join(basedir,'res/items'), relative=False)
-        modTimes = [get_file_time(mod) for mod in itemMods]
-        paired_list = zip(modTimes, itemMods)
-        # Sort the pairs
-        sorted_pairs = sorted(paired_list)
-        # Extract the sorted elements
-        sorted_itemMods = [element for _, element in sorted_pairs]
-
-        # Load subpets
-        petItems = get_child_folder(os.path.join(basedir,'res/pet'), relative=False)
-        sorted_itemMods += petItems
-
-        # Load items in character folder
-        char_item_dirs = find_dir_with_subdir(os.path.join(basedir,'res/role'), 'items')
-        sorted_itemMods += char_item_dirs
-
-        mod_configs = []
-        for i, itemFolder in enumerate(sorted_itemMods):
-
-            conf_file = os.path.join(itemFolder, 'items_config.json')
-
-            if not os.path.exists(conf_file):
-                continue
-
-            info_file = os.path.join(itemFolder, 'info.json')
-            if os.path.exists(info_file):
-                info = dict(json.load(open(info_file, 'r', encoding='UTF-8')))
-                modName = info.get('modName', None)
-            else:
-                modName = None
-            if not modName:
-                modName = os.path.basename(itemFolder)
-
-            item_conf = dict(json.load(open(conf_file, 'r', encoding='UTF-8')))
-            MOD_dict = {k: self.init_item(v, k, itemFolder, modName) for k, v in item_conf.items()}
-            mod_configs.append(MOD_dict)
-
-
-        # Union and Remove duplicates
-        for mod_cnf in mod_configs:
-            self.item_dict.update(mod_cnf) #MOD_dict[modKey])
-
-        # Remove duplicates in reward_dict
-        for k, v in self.reward_dict.items():
-            v = list(set(v))
-            self.reward_dict[k] = v
-
-    def init_item(self, conf_param, itemName, itemFolder, modName):
-        """
-        物品
-        :param name: 物品名称
-        :param image 物品图片路径
-        :param effect_HP: 对饱食度的效果
-        :param effect_FV: 对好感度的效果
-        :param drop_rate 完成任务后的掉落概率
-        :param fv_lock 好感度锁
-        :param buff 增益相关
-        :param description 物品描述
-        """
-        name = itemName #conf_param['name']
-        image = _load_item_img(os.path.join(itemFolder, conf_param['image']))
-        effect_HP = int(conf_param.get('effect_HP', 0))
-        
-        if effect_HP > 0:
-            effect_HP_str = '+%s'%effect_HP
-        else:
-            effect_HP_str = effect_HP
-
-        effect_FV = int(conf_param.get('effect_FV', 0))
-        if effect_FV > 0:
-            effect_FV_str = '+%s'%effect_FV
-        else:
-            effect_FV_str = effect_FV
-
-        drop_rate = float(conf_param.get('drop_rate', 0))
-        fv_lock = int(conf_param.get('fv_lock', 1))
-        description = text_wrap(conf_param.get('description', ''), 15) #self.wrapper(conf_param.get('description', ''))
-        item_type = conf_param.get('type', 'consumable')
-        if item_type == 'coin':
-            coin_name_dict = conf_param.get('name', {})
-            coin_name_dict['default'] = 'Coin'
-            self.coin = {'name':coin_name_dict, 'image':image}
-
-        buff = conf_param.get('buff', {})
-
-        if effect_FV==0 and effect_HP==0:
-            hint = '{} {}\n\n{}\n'.format(name,
-                                        ' '.join(['⭐']*fv_lock), 
-                                        description)
-        else:
-            hint = f"{name} {' '.join(['⭐']*fv_lock)}\n\n{description}\n____________________________________\n\n{self.HUNGERSTR}: {effect_HP_str}\n{self.FAVORSTR}: {effect_FV_str}\n"
-        
-        buff_description = buff.get('description', '')
-        if buff_description:
-            hint += f'\n{text_wrap(buff_description, 15)}'
-            
-
-        fvs = conf_param.get('fv_reward',[])
-        if type(fvs) == int:
-            fvs = [fvs]
-
-        if len(fvs) > 0:
-            for fv in fvs:
-                if fv in self.reward_dict:
-                    self.reward_dict[fv].append(name)
-                else:
-                    self.reward_dict[fv] = []
-                    self.reward_dict[fv].append(name)
-
-        pet_limit = conf_param.get('pet_limit', [])
-        cost = conf_param.get('cost', 50*(fv_lock+1))
-
-        return {'name': name,
-                'image': image,
-                'effect_HP': effect_HP,
-                'effect_FV': effect_FV,
-                'drop_rate': drop_rate,
-                'fv_lock': fv_lock,
-                'hint': hint,
-                'item_type': item_type,
-                'buff': buff,
-                'pet_limit': pet_limit,
-                'cost': cost,
-                'modName':modName
-               }
-
-    def wrapper(self, texts):
-        n_char = len(texts)
-        n_line = int(n_char//10 + 1)
-        texts_wrapped = ''
-        for i in range(n_line):
-            texts_wrapped += texts[(10*i):min((10*i + 10),n_char)] + '\n'
-        texts_wrapped = texts_wrapped.rstrip('\n')
-
-        return texts_wrapped
-
-
 def load_ItemMod(configPath, HUNGERSTR='Satiety', FAVORSTR='Favorability'):
-    """ Load item configuration """
-    
-    item_conf = dict(json.load(open(configPath, 'r', encoding='UTF-8')))
-    itemFolder = os.path.dirname(configPath)
-
-    info_file = os.path.join(itemFolder, 'info.json')
-    if os.path.exists(info_file):
-        info = dict(json.load(open(info_file, 'r', encoding='UTF-8')))
-        modName = info.get('modName', None)
-    else:
-        modName = None
-    if not modName:
-        modName = os.path.basename(itemFolder)
-
-    return {k: init_item(v, k, itemFolder, modName, HUNGERSTR, FAVORSTR) for k, v in item_conf.items()}
-
-
-def init_item(conf_param, itemName, itemFolder, modName, HUNGERSTR, FAVORSTR):
-    """
-    物品
-    :param name: 物品名称
-    :param image 物品图片路径
-    :param effect_HP: 对饱食度的效果
-    :param effect_FV: 对好感度的效果
-    :param drop_rate 完成任务后的掉落概率
-    :param fv_lock 好感度锁
-    :param description 物品描述
-    """
-
-    name = itemName #conf_param['name']
-    image = _load_item_img(os.path.join(itemFolder, conf_param['image']))
-    effect_HP = int(conf_param.get('effect_HP', 0))
-    
-    if effect_HP > 0:
-        effect_HP_str = '+%s'%effect_HP
-    else:
-        effect_HP_str = effect_HP
-
-    effect_FV = int(conf_param.get('effect_FV', 0))
-    if effect_FV > 0:
-        effect_FV_str = '+%s'%effect_FV
-    else:
-        effect_FV_str = effect_FV
-
-    drop_rate = float(conf_param.get('drop_rate', 0))
-    fv_lock = int(conf_param.get('fv_lock', 1))
-    description = text_wrap(conf_param.get('description', ''), 15)
-    item_type = conf_param.get('type', 'consumable')
-
-    buff = conf_param.get('buff', {})
-
-    if effect_FV==0 and effect_HP==0:
-        hint = '{} {}\n\n{}\n'.format(name,
-                                    ' '.join(['⭐']*fv_lock), 
-                                    description)
-    else:
-        hint = f"{name} {' '.join(['⭐']*fv_lock)}\n\n{description}\n____________________________________\n\n{HUNGERSTR}: {effect_HP_str}\n{FAVORSTR}: {effect_FV_str}\n"
-    
-    buff_description = buff.get('description', '')
-    if buff_description:
-        hint += f'\n{text_wrap(buff_description, 15)}'
-    '''
-    fvs = conf_param.get('fv_reward',[])
-    if type(fvs) == int:
-        fvs = [fvs]
-
-    if len(fvs) > 0:
-        for fv in fvs:
-            if fv in self.reward_dict:
-                self.reward_dict[fv].append(name)
-            else:
-                self.reward_dict[fv] = []
-                self.reward_dict[fv].append(name)
-    '''
-
-    pet_limit = conf_param.get('pet_limit', [])
-    cost = conf_param.get('cost', 50*(fv_lock+1))
-        
-
-    return {'name': name,
-            'image': image,
-            'effect_HP': effect_HP,
-            'effect_FV': effect_FV,
-            'drop_rate': drop_rate,
-            'fv_lock': fv_lock,
-            'hint': hint,
-            'item_type': item_type,
-            'buff': buff,
-            'pet_limit': pet_limit,
-            'cost': cost,
-            'modName':modName
-           }
-
-
-def checkItemMOD(itemFolder):
-    """ Check if the item MOD (under res/items/MODENAME/) are able to be loaded with no potential error """
-    """
-    Status Code
-        0: Success
-        1: items_config.json broken or not exist
-        2: "image" key missing
-        3: missing image files
-        4: "pet_limit" is not list
-    """
-
-    # Load config file
-    configFile = os.path.join(itemFolder,'items_config.json')
-    try:
-        item_dict = dict(json.load(open(configFile, 'r', encoding='UTF-8')))
-    except:
-        return 1, None
-
-    # All necessary keys exist
-    missingKey = [k for k, v in item_dict.items() if 'image' not in v.keys()]
-    if missingKey:
-        return 2, missingKey
-
-    # Image should exist
-    missingImage = [k for k, v in item_dict.items() if not os.path.exists(os.path.join(itemFolder, v['image']))]
-    if missingImage:
-        return 3, missingImage
-
-    # pet_limit should be an list
-    typeMissmatch = [k for k, v in item_dict.items() if type(v.get('pet_limit', [])) is not list]
-    if typeMissmatch:
-        return 4, typeMissmatch
-    
-    return 0, None
-
-
-def _load_item_img(img_path):
-
-    img_file = img_path #os.path.join(basedir, 'res/items/{}'.format(img_path))
-    return _get_q_img(img_file)
-
-def _get_q_img(img_file) -> QPixmap:
-
-    #image = QImage()
-    image = QPixmap()
-    image.load(img_file)
-    return image
-
-
-
-
-
-
-
-
-
+    """物品配置加载 (精简版 - 已移除)"""
+    return {}

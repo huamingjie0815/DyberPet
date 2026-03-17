@@ -289,8 +289,8 @@ class StatusCard(SimpleCardWidget):
         self.nameLabel.adjustSize()
         self.nameLabel.setFixedHeight(25)
 
-        daysText = self.tr(" (Fed for ") + str(settings.pet_data.days) +\
-                   self.tr(" days)")
+        daysText = self.tr(" (陪伴 ") + str(settings.pet_data.days) +\
+                   self.tr(" 天)")
         self.daysLabel = CaptionLabel(daysText)
         setFont(self.daysLabel, 15, QFont.Normal)
         self.daysLabel.setFixedHeight(25)
@@ -299,30 +299,6 @@ class StatusCard(SimpleCardWidget):
         hbox_title.addStretch(1)
         hbox_title.addWidget(self.daysLabel, Qt.AlignRight | Qt.AlignVCenter)
         
-        # Level Badge --------------------
-        lvlWidget = QWidget()
-        h_box0 = QHBoxLayout(lvlWidget)
-        h_box0.setContentsMargins(2,0,2,0)
-        h_box0.setSpacing(5)
-        h_box0.setAlignment(Qt.AlignCenter)
-        lvlLable = CaptionLabel(self.tr("Level"))
-        setFont(lvlLable, 13, QFont.Normal)
-        lvlLable.adjustSize()
-        lvlLable.setFixedSize(48, lvlLable.height())
-        self.lvl_badge = LevelBadge(settings.pet_data.fv_lvl, 18)
-        self.lvl_badge.setFixedSize(self.lvl_badge.width(), 20)
-        h_box0.addWidget(lvlLable)
-        #h_box0.addStretch(1)
-        h_box0.addWidget(self.lvl_badge)
-        h_box0.addStretch(1)
-        lvlWidget.setFixedHeight(20)
-
-
-        # Status Bar -----------
-        self.hpStatus = HPWidget()
-        self.fvStatus = FVWidget()
-
-
         # Assemble all widgets -----------
         vBoxLayout = QVBoxLayout()
         vBoxLayout.setContentsMargins(0, 0, 0, 0)
@@ -332,10 +308,6 @@ class StatusCard(SimpleCardWidget):
         vBoxLayout.addLayout(
             hbox_title, Qt.AlignLeft | Qt.AlignVCenter)
         vBoxLayout.addWidget(HorizontalSeparator(QColor(20,20,20,125), 1))
-        #vBoxLayout_status.addStretch(1)
-        vBoxLayout.addWidget(lvlWidget, 1, Qt.AlignLeft | Qt.AlignVCenter)
-        vBoxLayout.addWidget(self.hpStatus, 1, Qt.AlignLeft | Qt.AlignVCenter)
-        vBoxLayout.addWidget(self.fvStatus, 1, Qt.AlignLeft | Qt.AlignVCenter)
         vBoxLayout.addStretch(1)
 
         # Assemble main body
@@ -350,22 +322,6 @@ class StatusCard(SimpleCardWidget):
         self._clear_layout(self.hBoxLayout)
         self.petname = settings.petname
         self.__init_Card()
-        #self._updateBackgroundColor()
-    '''
-    def _deleteSave(self):
-        self._clear_layout(self.vBoxLayout)
-        self.jsonPath = None
-        self.cardTitle = None
-        self.__init_EmptyCard()
-        self._updateBackgroundColor()
-    '''
-    def _updateHP(self, hp: int):
-        self.hpStatus._updateHP(hp)
-
-    def _updateFV(self, fv: int, fv_lvl: int):
-        self.fvStatus._updateFV(fv, fv_lvl)
-        if fv_lvl != self.lvl_badge.level:
-            self.lvl_badge.set_level(fv_lvl)
         
 
 
@@ -705,7 +661,6 @@ class BPStackedWidget(QStackedWidget):
         current_widget = self.currentWidget()
         if current_widget:
             height = current_widget.height()
-            #print(height)
             self.resize(self.width(), height)
     
     def subWidget_sizeChange(self, tab_idx, h):
@@ -723,15 +678,13 @@ class BPStackedWidget(QStackedWidget):
 
 
 
-
 class coinWidget(QWidget):
     """
-    Display number of coins
+    Display number of coins (精简版 - stub)
     """
     coinUpdated = Signal(name='coinUpdated')
 
     def __init__(self, parent=None):
-
         super().__init__(parent)
         self.setObjectName("coinWidget")
         self.hBoxLayout = QHBoxLayout(self)
@@ -743,45 +696,20 @@ class coinWidget(QWidget):
         self.adjustSize()
 
     def _init_widget(self):
-        #self.label = CaptionLabel(self.tr('DyberCoin'))
-        #setFont(self.label, 14, QFont.Normal)
-
-        self.icon = QLabel(self)
-        self.icon.setFixedSize(25,25)
-        # image = QPixmap()
-        # image.load(os.path.join(basedir, 'res/icons/Dashboard/coin.svg'))
-        self.icon.setScaledContents(True)
-        self.icon.setPixmap(settings.items_data.coin['image']) #item_dict['coin']['image']) #image)
-        self.icon.setAlignment(Qt.AlignCenter)
-        self.icon.installEventFilter(ToolTipFilter(self.icon, showDelay=500))
-        #self.icon.setToolTip(self.tr('Dyber Coin'))
-        self.icon.setToolTip(settings.items_data.coin['name'].get(settings.language_code, settings.items_data.coin['name']['default']))
-
+        # 精简版: 不显示金币图标，只显示占位符
         self.coinAmount = LineEdit(self)
         self.coinAmount.setClearButtonEnabled(False)
         self.coinAmount.setEnabled(False)
+        self.coinAmount.setText("--")
 
         self.hBoxLayout.addStretch(1)
-        self.hBoxLayout.addWidget(self.icon, Qt.AlignRight | Qt.AlignVCenter)
         self.hBoxLayout.addWidget(self.coinAmount, Qt.AlignRight | Qt.AlignVCenter)
-        coin_value = settings.pet_data.coins
-        self._updateCoin(int(coin_value))
-
-    def _updateCoinUI(self):
-        self.icon.setPixmap(settings.items_data.coin['image'])
-        self.icon.setToolTip(settings.items_data.coin['name'].get(settings.language_code, settings.items_data.coin['name']['default']))
 
     def _updateCoin(self, coinNumber: int):
-        num_str = f"{coinNumber:,}"
-        self.coinAmount.setText(num_str)
-        self.coinAmount.setFixedWidth(len(num_str)*7 + 29)
-        self.coinUpdated.emit()
-    
+        self.coinAmount.setText("--")
+
     def _update2data(self):
-        coinNumber = settings.pet_data.coins
-        num_str = f"{coinNumber:,}"
-        self.coinAmount.setText(num_str)
-        self.coinAmount.setFixedWidth(len(num_str)*7 + 29)
+        self.coinAmount.setText("--")
 
 
 
@@ -1068,7 +996,6 @@ class itemTabWidget(QWidget):
         ncol = (width-39) // (ITEM_SIZE+9) #math.ceil(SACECARD_WH*n / width)
         nrow = math.ceil(n / ncol)
         h = (ITEM_SIZE+10)*nrow + 49
-        #print(width, n, ncol, nrow, h)
         self.size_changed.emit(self.tab_index, h)
         #h = self.cardLayout.heightForWidth(self.width()) #+ 6
         return self.resize(self.width(), h)
@@ -1205,7 +1132,6 @@ class itemTabWidget(QWidget):
             #self.changeButton()
 
         elif self.items_data.item_dict[item_name_selected]['item_type'] == 'collection':
-            #print('collection used')
             #self.cells_dict[self.selected_cell].unselected()
             self.cells_dict[self.selected_cell].consumeItem()
             self.use_item_inven.emit(item_name_selected)
@@ -1213,7 +1139,6 @@ class itemTabWidget(QWidget):
             self.changeButton(self.cells_dict[self.selected_cell].item_inuse)
 
         elif self.items_data.item_dict[item_name_selected]['item_type'] == 'dialogue':
-            #print('collection used')
             #self.cells_dict[self.selected_cell].unselected()
             self.use_item_inven.emit(item_name_selected)
             #self.selected_cell = None
@@ -1844,7 +1769,6 @@ class ShopView(QWidget):
         n = self.cardLayout.count()
         ncol = (width-9) // (SHOPITEM_W+9) #math.ceil(SACECARD_WH*n / width)
         nrow = math.ceil(n / ncol)
-        #print(width,ncol,nrow)
         h = (SHOPITEM_H+9)*nrow + 49
 
         return self.resize(self.width(), h)
@@ -1859,7 +1783,6 @@ class ShopView(QWidget):
                 pass
 
     def _updateList(self, tagDict, searchText):
-        #print(tagDict, searchText)
         if searchText != '':
             idxToShow = self.searchDict[searchText]
         else:
@@ -1875,7 +1798,6 @@ class ShopView(QWidget):
             idxInTags = set(idxInTags)
             idxToShow = [i for i in idxToShow if i in idxInTags]
 
-        #print([self._Items[i] for i in idxToShow])
         self.cardLayout.removeAllWidgets()
 
         for i, card in self.cards.items():
@@ -1970,7 +1892,6 @@ class filterView(SimpleCardWidget):
     
     def adjustSize(self):
         w = [w.height() for _,w in self.filter_dict.items()]
-        #print(w)
         h = sum(w) + (2*len(w)-1)*5 + 30 + len(w)*20
         return self.resize(self.width(), h)
 
@@ -2027,7 +1948,6 @@ class filterWidget(QWidget):
         nrow = self._calculate_nrow()
         btnH = self.opt_btn[0].height()
         h = (btnH+10)*nrow + 5*(nrow-1)
-        #print(nrow)
         return self.resize(self.width(), h)
 
 
@@ -2742,7 +2662,6 @@ Everytime you finish a 25min Pomodoro, you get coin rewarded"""),
 
 
     def reward_coins(self, nminutes):
-        #print(f"Reward {nminutes} minutes")
         if nminutes <= 0:
             return
         n_coins = nminutes*25
@@ -2970,7 +2889,6 @@ class ProgressPanel(CardWidget):
         newVal = settings.task_data.taskData['history'][-1][1] + add_value
 
         # Update UI
-        #print('check', add_value, newVal, settings.task_data.taskData['history'][-1][1])
         self.progressRing.setFormat(f"{newVal}" + " " + self.tr("Minutes"))
         self.progressRing.setValue(min(self.daily_goal, newVal))
 

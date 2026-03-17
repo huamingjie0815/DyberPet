@@ -502,7 +502,6 @@ class SettingUI(QWidget):
         self.setCursor(QCursor(Qt.ArrowCursor))
 
     def valuechange_scale(self):
-        #print(self.slider_scale.value())
         if settings.tunable_scale >=5 and self.slider_scale.value()==500:
             self.scale_changed.emit()
         else:
@@ -561,7 +560,6 @@ class SettingUI(QWidget):
             settings.save_settings()
             self.mouse_text.setText(str(settings.fixdragspeedx))
 
-        #print(self.slider_mouse.value(), settings.fixdragspeedx)
 
     def mouse_text_update(self):
         try:
@@ -897,7 +895,6 @@ class Tomato(QWidget):
             return
         else:
             n_tm = int(n_tm)
-        #print(n_tm)
         self.tomato_on = True
         self.n_tomato_label1.setText(self.tr('正在进行第'))
         self.n_tomato.setReadOnly(True)
@@ -1696,7 +1693,6 @@ class Remindme(QWidget):
             self.e2.setPlainText(current_text)
 
     def save_remindme(self):
-        #print(self.e2.toPlainText()=='')
         f = open(os.path.join(configdir,'data/remindme.txt'),'w', encoding='UTF-8')
         f.write(self.e2.toPlainText())
         f.close()
@@ -2387,19 +2383,16 @@ class Inventory(QWidget):
             self.changeButton()
 
         elif self.items_data.item_dict[item_name_selected]['item_type'] == 'collection':
-            #print('collection used')
             self.cells_dict[self.selected_cell].unselected()
             self.cells_dict[self.selected_cell].consumeItem()
             if self.cells_dict[self.selected_cell].clct_inuse:
                 self.use_item_inven.emit(item_name_selected)
             else:
-                #print('收回')
                 self.use_item_inven.emit(item_name_selected)
             self.selected_cell = None
             self.changeButton()
 
         elif self.items_data.item_dict[item_name_selected]['item_type'] == 'dialogue':
-            #print('collection used')
             self.cells_dict[self.selected_cell].unselected()
             #self.cells_dict[self.selected_cell].consumeItem()
             self.use_item_inven.emit(item_name_selected)
@@ -2423,7 +2416,6 @@ class Inventory(QWidget):
             else:
                 item_names_pendding.append(item)
 
-        #print(n_items, item_names)
         # 物品添加列表
         items_toadd = {}
         for i in range(len(item_names_pendding)):
@@ -2798,7 +2790,6 @@ class QToaster(QFrame):
 
         self.label = QLabel(message)
         font = QFont(self.tr('Segoe UI'))
-        #print(settings.font_factor)
         font.setPointSize(10)
         self.label.setFont(font) #QFont('黑体', int(10/screen_scale)))
         self.label.setWordWrap(True)
@@ -3134,7 +3125,6 @@ class DPDialogue(QWidget):
         self.label.setFixedWidth(int(250))
         self.label.setMinimumSize(int(250),int(20))
         font = QFont(self.tr('Segoe UI'))
-        #print(settings.font_factor)
         font.setPointSize(10)
         self.label.setFont(font) #QFont('黑体', int(10/screen_scale)))
         self.label.setWordWrap(True)
@@ -3325,7 +3315,6 @@ class DialogueButtom(QPushButton):
         self.msg = msg
         self.msg_key = msg_key
         #n_sp_symbol = math.ceil((msg.count('，') + msg.count('。') + msg.count('（') + msg.count('）')) / math.ceil(len(msg)/15))
-        #print(n_sp_symbol)
         self.setText(text_wrap(msg,15)) #-n_sp_symbol))
 
         self.setStyleSheet(OptionbuttonStyle)

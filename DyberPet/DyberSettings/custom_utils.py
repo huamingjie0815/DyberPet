@@ -824,7 +824,6 @@ class SaveCardGroup(QWidget):
         card.setParent(self)
         self.cardLayout.addWidget(card)
         self.adjustSize()
-        #print(self.width(), self.height())
 
     def addSaveCards(self, cards: List[QWidget]):
         """ add setting cards to group """
@@ -939,7 +938,6 @@ class CharCardGroup(QWidget):
         card.setParent(self)
         self.cardLayout.addWidget(card)
         self.adjustSize()
-        #print(self.width(), self.height())
 
     def addInfoCards(self, cards: List[QWidget]):
         """ add setting cards to group """
@@ -1761,7 +1759,6 @@ class ItemGroup(QWidget):
         card.setParent(self)
         self.cardLayout.addWidget(card)
         self.adjustSize()
-        #print(self.width(), self.height())
 
     def addItemCards(self, cards: List[QWidget]):
         """ add setting cards to group """

@@ -57,7 +57,6 @@ class SaveInterface(ScrollArea):
         self.headerLayout.addItem(spacerItem2)
 
         
-        # Save transfer ================================================================================
         self.TransferSaveGroup = SettingCardGroup(
             self.tr("Save Transfer"), self.scrollWidget)
         
@@ -484,7 +483,6 @@ class SaveInterface(ScrollArea):
         if WarrningMessage.exec():
             return True
         else:
-            #print('Cancel button is pressed')
             return False
 
     def __showSystemNote(self, content, type_code):

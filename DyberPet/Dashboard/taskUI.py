@@ -138,5 +138,4 @@ From top to bottom, there are 3 widgets:
         if WarrningMessage.exec():
             return True
         else:
-            #print('Cancel button is pressed')
             return False

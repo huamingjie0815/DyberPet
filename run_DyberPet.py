@@ -112,24 +112,6 @@ class DyberPetApp(QApplication):
         # Dashboard - others
         self.p.show_dashboard.connect(self.board.show_window)
         self.note.noteToLog.connect(self.board.statusInterface._addNote)
-        self.p.hp_updated.connect(self.board.statusInterface.StatusCard._updateHP)
-        self.p.fv_updated.connect(self.board.statusInterface.StatusCard._updateFV)
-        self.p.change_note.connect(self.board.statusInterface._changePet)
-        self.board.statusInterface.changeStatus.connect(self.p._change_status)
-        self.p.stopAllThread.connect(self.board.statusInterface.stopBuffThread)
-
-        self.acc.acc_withdrawed.connect(self.board.backpackInterface.acc_withdrawed)
-        self.board.backpackInterface.use_item_inven.connect(self.p.use_item)
-        self.board.backpackInterface.item_note.connect(self.p.register_notification)
-        self.board.backpackInterface.item_drop.connect(self.p.item_drop_anim)
-        self.p.fvlvl_changed_main_inve.connect(self.board.backpackInterface.fvchange)
-        self.p.fvlvl_changed_main_inve.connect(self.board.shopInterface.fvchange)
-        self.p.addItem_toInven.connect(self.board.backpackInterface.add_items)
-        self.p.compensate_rewards.connect(self.board.backpackInterface.compensate_rewards)
-        self.p.refresh_bag.connect(self.board.backpackInterface.refresh_bag)
-        self.p.autofeed.connect(self.board.backpackInterface.autofeed)
-        self.p.refresh_bag.connect(self.board.shopInterface.refresh_shop)
-        self.p.addCoins.connect(self.board.backpackInterface.addCoins)
 
         # Tasks and Timer
         self.board.taskInterface.focusPanel.start_pomodoro.connect(self.p.run_tomato)
@@ -189,8 +171,6 @@ if __name__ == '__main__':
     # Create App
     QApplication.setHighDpiScaleFactorRoundingPolicy(
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
-    #QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
-    #QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
 
     app = DyberPetApp(sys.argv)
     app.setAttribute(Qt.AA_DontCreateNativeWidgetSiblings)

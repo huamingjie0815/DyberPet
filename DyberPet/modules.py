@@ -41,18 +41,16 @@ class Animation_worker(QObject):
 
     def __init__(self, pet_conf, parent=None):
         """
-        Animation Module
+        Animation Module (精简版)
         Display user-defined animations randomly
         :param pet_conf: PetConfig class object in Main Widgets
-
         """
         super(Animation_worker, self).__init__(parent)
         self.pet_conf = pet_conf
-        self.hp_cut_off = sys_hp_tiers #[0,50,80,100]
-        self.current_status = [settings.pet_data.hp_tier,settings.pet_data.fv_lvl] #self._cal_status_type()
-        self.nonDefault_prob_list = sys_nonDefault_prob #[1, 0.05, 0.125, 0.25]
-        self.nonDefault_prob = self.nonDefault_prob_list[self.current_status[0]]
-        self.act_cmlt_prob = self._cal_prob(self.current_status)
+        # 精简版: 不再使用HP/FV状态
+        self.current_status = [3, 0]  # 默认状态
+        self.nonDefault_prob = 0.25  # 简化概率
+        self.act_cmlt_prob = self._cal_prob()
         self.is_killed = False
         self.is_paused = False
 
@@ -63,7 +61,6 @@ class Animation_worker(QObject):
         time.sleep(5)
         while not self.is_killed:
             #if self.is_hp:
-            #    print(self.is_hp, self.is_fv)
             self.random_act()
 
             while self.is_paused:
@@ -84,41 +81,26 @@ class Animation_worker(QObject):
         self.is_paused = False
 
     def update_prob(self):
-        self.current_status = [settings.pet_data.hp_tier,settings.pet_data.fv_lvl] #self._cal_status_type()
-        self.nonDefault_prob = self.nonDefault_prob_list[self.current_status[0]]
-        self.act_cmlt_prob = self._cal_prob(self.current_status)
+        # 精简版: 不再根据HP/FV更新概率
+        self.act_cmlt_prob = self._cal_prob()
 
-    def _cal_prob(self, current_status):
+    def _cal_prob(self):
+        """精简版: 简化概率计算，不使用HP/FV状态"""
         act_conf = settings.act_data.allAct_params[settings.petname]
-        act_name = [ k for k,v in act_conf.items() ]
-        act_prob = [ act_conf[k]['act_prob'] for k in act_name ] #self.pet_conf.act_prob
-        act_type = [ act_conf[k]['status_type'] for k in act_name ]
-        act_unlocked = [ act_conf[k]['unlocked'] for k in act_name ]
-        act_inlist = [ act_conf[k]['in_playlist'] for k in act_name ]
-
-        #if v['in_playlist'] and v['status_type'][1]<= current_status[1]
+        act_name = [k for k, v in act_conf.items()]
+        act_prob = [act_conf[k]['act_prob'] for k in act_name]
+        act_unlocked = [act_conf[k]['unlocked'] for k in act_name]
+        act_inlist = [act_conf[k]['in_playlist'] for k in act_name]
 
         new_prob = []
         for i in range(len(act_name)):
-            if not act_unlocked[i]:
+            if not act_unlocked[i] or not act_inlist[i]:
                 new_prob.append(0)
-                continue
-
-            if (current_status[0] == 0) and (act_type[i][0] != 0):
-                new_prob.append(0)
-                
-            elif current_status[1] < act_type[i][1]:
-                new_prob.append(0)
-
-            elif act_type[i][0] == 0:
-                new_prob.append(act_prob[i] * int(current_status[0] == 0))
-
             else:
-                new_prob.append(act_prob[i] * (1/4)**(abs(act_type[i][0]-current_status[0])) * int(act_inlist[i]))
+                new_prob.append(act_prob[i])
 
         if sum(new_prob) != 0:
-            new_prob = [i/sum(new_prob) for i in new_prob]
-            #print(new_prob)
+            new_prob = [i / sum(new_prob) for i in new_prob]
             total = 0
             act_cmlt_prob = []
             for i in range(len(new_prob)):
@@ -129,26 +111,7 @@ class Animation_worker(QObject):
             act_cmlt_prob = [0] * len(new_prob)
 
         act_cmlt_prob = [round(i,3) for i in act_cmlt_prob]
-        #print(act_name)
-        #print(act_cmlt_prob)
         return act_cmlt_prob
-
-        
-
-    def hpchange(self, hp_tier, direction):
-        self.current_status[0] = int(hp_tier)
-        self.act_cmlt_prob = self._cal_prob(self.current_status)
-        self.nonDefault_prob = self.nonDefault_prob_list[self.current_status[0]]
-        #print('animation module is aware of the hp tier change!')
-
-    def fvchange(self, fv_lvl):
-        self.current_status[1] = int(fv_lvl)
-        settings.act_data._pet_refreshed(fv_lvl)
-        self.act_cmlt_prob = self._cal_prob(self.current_status)
-        self.nonDefault_prob = self.nonDefault_prob_list[self.current_status[0]]
-        #print('animation module is aware of the fv lvl change! %i'%fv_lvl)
-
-    
 
     def random_act(self) -> None:
         """
@@ -231,7 +194,6 @@ class Animation_worker(QObject):
             self.acc_regist.emit(accs)
         for act in acts:
             self._run_act(act)
-        #print('%.2fs'%(time.time()-start))
         #self.is_run_act = False
 
     def _run_act(self, act: Act) -> None:
@@ -273,7 +235,6 @@ class Animation_worker(QObject):
                 settings.current_img = img
                 settings.previous_anchor = settings.current_anchor
                 settings.current_anchor =  [int(i * settings.tunable_scale) for i in act.anchor]
-                #print('anim', settings.previous_anchor, settings.current_anchor)
                 self.sig_setimg_anim.emit()
                 #time.sleep(act.frame_refresh) ######## sleep 和 move 是不是应该反过来？
                 #if act.need_move:
@@ -313,7 +274,6 @@ class Animation_worker(QObject):
         :param act: 动作
         :return
         """
-        #print(act.direction, act.frame_move)
         plus_x = 0.
         plus_y = 0.
         direction = act.direction
@@ -376,15 +336,12 @@ class Interaction_worker(QObject):
         self.timer = QTimer()
         self.timer.setTimerType(Qt.PreciseTimer)
         self.timer.timeout.connect(self.run)
-        #print(self.pet_conf.interact_speed)
         self.timer.start(self.pet_conf.interact_speed)
         #self.start = time.time()
 
 
     def run(self):
-        #print(time.time()-self.start)
         #self.start = time.time()
-        #print('start_run')
         if self.interact is None:
             return
         elif self.interact not in dir(self):
@@ -417,7 +374,6 @@ class Interaction_worker(QObject):
                 self.stop_interact()
                 return
             #elif interact == 'customized':
-            #    print("Not implemented")
             #    self.stop_interact()
             #    return
 
@@ -476,11 +432,8 @@ class Interaction_worker(QObject):
         settings.act_id = 0
 
     def sample_pat_anim(self):
-        hp_tier = settings.pet_data.hp_tier
-        prob = [1*(0.25**(abs(i-hp_tier))) for i in range(len(settings.HP_TIERS))]
-        prob = [i/sum(prob) for i in prob]
-        act_idx = random.choices([i for i in range(len(settings.HP_TIERS))], weights=prob, k=1)[0]
-        return act_idx
+        # 精简版: 简化拍拍动画选择
+        return 3  # 始终返回最高状态
 
     def img_from_act(self, act):
 
@@ -510,7 +463,6 @@ class Interaction_worker(QObject):
 
     def animat(self, act_name):
         #if act_name == 'on_floor':
-        #    print(settings.playid)
 
         #start = time.time()
         try:
@@ -527,7 +479,6 @@ class Interaction_worker(QObject):
             return
         
         acts = self.pet_conf.random_act[acts_index]
-        #print(settings.act_id, len(acts))
         if settings.act_id >= len(acts):
             #settings.act_id = 0
             #self.interact = None
@@ -552,7 +503,6 @@ class Interaction_worker(QObject):
             if settings.previous_img != settings.current_img or settings.previous_anchor != settings.current_anchor:
                 self.sig_setimg_inter.emit()
                 self._move(act)
-        #print('%.5fs'%(time.time()-start))
         
     def anim_acc(self, acc_name):
 
@@ -630,7 +580,6 @@ class Interaction_worker(QObject):
 
     def patpat(self, act_name):
         acts = [self.pet_conf.patpat[self.pat_idx]]
-        #print(settings.act_id, len(acts))
         if settings.act_id >= len(acts):
             #settings.act_id = 0
             #self.interact = None
@@ -715,10 +664,7 @@ class Interaction_worker(QObject):
 
     def drop(self):
         #掉落
-        #print("Dropping")
 
-        ##print(dragspeedx)
-        ##print(dragspeedy)
         #dropnext=pettop+info.gravity*dropa-info.gravity/2
         plus_y = settings.dragspeedy #+ self.pet_conf.dropspeed
         plus_x = settings.dragspeedx
@@ -732,7 +678,6 @@ class Interaction_worker(QObject):
         :param act: 动作
         :return
         """
-        #print(act.direction, act.frame_move)
         plus_x = 0.
         plus_y = 0.
         direction = act.direction
@@ -761,13 +706,10 @@ class Interaction_worker(QObject):
     def use_item(self, item):
         # 宠物进行 三个等级的喂食动画
         if item in self.pet_conf.item_favorite:
-            #print('animation 1 here!')
             self.start_interact('animat','feed_1')
         elif item in self.pet_conf.item_dislike:
-            #print('animation 3 here!')
             self.start_interact('animat','feed_3')
         else:
-            #print('animation 2 here!')
             self.start_interact('animat','feed_2')
 
         '''
@@ -952,7 +894,6 @@ class Scheduler_worker(QObject):
         while settings.showing_dialogue_now:
             time.sleep(1)
         settings.showing_dialogue_now = True
-        #print('show_dialogue check')
 
         #for text_toshow in texts_toshow:
         self.sig_settext_sche.emit(note_type, texts_toshow) #text_toshow)
@@ -962,11 +903,9 @@ class Scheduler_worker(QObject):
 
     '''
     def item_drop(self, n_minutes):
-        #print(n_minutes)
         nitems = n_minutes // 5
         remains = max(0, n_minutes % 5 - 1)
         chance_drop = random.choices([0,1], weights=(1-remains/5, remains/5))
-        #print(chance_drop)
         nitems += chance_drop[0]
         #for test -----
         #nitems = 4
@@ -1212,7 +1151,6 @@ class Scheduler_worker(QObject):
             if self.focus_time > 1:
                 self.scheduler.add_job(self.change_focus, interval.IntervalTrigger(minutes=1), id='focus_timer', replace_existing=True)
             #elif self.focus_time < 1:
-            #    print(self.focus_time)
                 #focus_time_sec = int()
             self.sig_settime_sche.emit('focus_start', self.focus_time)
             text_toshow = self.focus_text['note_start'] #"你的专注任务开始啦！"

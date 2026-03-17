@@ -204,7 +204,6 @@ class DPNote(QWidget):
         elif note_type == 'random':
             random_list = [i for i in self.icon_dict.keys() if i.startswith('random') and\
                            self.icon_dict[i]['fv_lock']<= settings.pet_data.fv_lvl]
-            #print(random_list)
             if len(random_list) == 0:
                 self.note_in_prepare = False
                 return
@@ -297,7 +296,6 @@ class DPNote(QWidget):
             self.setup_notification('status_hp', message=self.tr('Your pet is hungry now~ (Favor point stops increasing)'))
 
     def fvchange_note(self, fv_lvl):
-        #print(fv_lvl,'note')
         if fv_lvl == -1:
             self.setup_notification('status_fv',
                                     message=self.tr('Congrats! You have reached the max FV level! Thank you for your companionship all this time!'))

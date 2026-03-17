@@ -384,7 +384,6 @@ class ActDesignWindow(QWidget):
         if WarrningMessage.exec():
             return True
         else:
-            #print('Cancel button is pressed')
             return False
         
     def updateCombo(self):
@@ -889,7 +888,6 @@ You won't be able to recover after confirming.""")
 
         # Resize image label
         pixmap_w, pixmap_h = combined_pixmap.width(), combined_pixmap.height()
-        #print(pixmap_w, pixmap_h)
         self.resize_image_label(pixmap_w, pixmap_h)
         self.image.setPixmap(combined_pixmap)
 
@@ -922,7 +920,6 @@ You won't be able to recover after confirming.""")
         else:
             scale_factor = max(img_w/frame_edge, img_h/frame_edge)
             self.image.setFixedSize(int(img_w/scale_factor), int(img_h/scale_factor))
-        #print(self.image.width(), self.image.height())
 
     def _update_HP_lvl(self):
         anim_list = [v['name'] for _,v in self.all_design_conf.items()]

@@ -441,7 +441,6 @@ For most of time, App can import the character for you automatically. But in any
         if WarrningMessage.exec():
             return True
         else:
-            #print('Cancel button is pressed')
             return False
 
     def __showSystemNote(self, content, type_code, duration=5000):

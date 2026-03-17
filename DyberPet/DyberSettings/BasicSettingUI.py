@@ -50,7 +50,6 @@ class SettingInterface(ScrollArea):
         # setting label
         self.settingLabel = QLabel(self.tr("Settings"), self)
         
-        # Mode =========================================================================================
         self.ModeGroup = SettingCardGroup(self.tr('Mode'), self.scrollWidget)
         # Always on top
         self.AlwaysOnTopCard = SwitchSettingCard(
@@ -94,7 +93,6 @@ class SettingInterface(ScrollArea):
             self.AutoLockCard.switchButton.indicator.setEnabled(False)
 
 
-        # Interaction parameters =======================================================================
         self.InteractionGroup = SettingCardGroup(self.tr('Interaction'), self.scrollWidget)
         self.GravityCard = Dyber_RangeSettingCard(
             1, 200, 0.01,
@@ -118,7 +116,6 @@ class SettingInterface(ScrollArea):
         self.DragCard.slider.valueChanged.connect(self._DragChanged)
 
 
-        # Notification parameters ======================================================================
         self.VolumnGroup = SettingCardGroup(self.tr('Notification'), self.scrollWidget)
         self.VolumnCard = Dyber_RangeSettingCard(
             0, 10, 0.1,
@@ -154,7 +151,6 @@ class SettingInterface(ScrollArea):
             self.AllowBubbleCard.setChecked(False)
         self.AllowBubbleCard.switchButton.checkedChanged.connect(self._AllowBubbleChanged)
 
-        # Personalization ==============================================================================
         self.PersonalGroup = SettingCardGroup(self.tr('Personalization'), self.scrollWidget)
         self.ScaleCard = Dyber_RangeSettingCard(
             1, 50, 0.1,
@@ -199,7 +195,6 @@ class SettingInterface(ScrollArea):
         )
         self.themeColorCard.colorChanged.connect(self.colorChanged)
 
-        # About ==============================================================================
         self.aboutGroup = SettingCardGroup(self.tr('About'), self.scrollWidget)
         update_needed, update_text = self._checkUpdate()
         settings.UPDATE_NEEDED = update_needed

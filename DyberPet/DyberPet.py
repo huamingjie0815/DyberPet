@@ -379,7 +379,7 @@ class PetWidget(QWidget):
     taskUI_task_end = Signal(name="taskUI_task_end")
     single_pomo_done = Signal(name="single_pomo_done")
 
-    refresh_acts = Signal(name='refresh_acts')
+    # refresh_acts signal removed - was used for custom animation UI
 
     def __init__(self, parent=None, curr_pet_name=None, pets=(), screens=[]):
         """
@@ -1057,17 +1057,7 @@ class PetWidget(QWidget):
         self.stop_thread('Animation')
         self.stop_thread('Interaction')
 
-        # Change status
-        self.pet_hp.init_HP(settings.pet_data.hp, sys_hp_interval) #2)
-        self.pet_fv.init_FV(settings.pet_data.fv, settings.pet_data.fv_lvl)
-
-        # Change status related behavior
-        #self.workers['Animation'].hpchange(settings.pet_data.hp_tier, None)
-        #self.workers['Animation'].fvchange(settings.pet_data.fv_lvl)
-
         # Animation config data update
-        settings.act_data._pet_refreshed(settings.pet_data.fv_lvl)
-        self.refresh_acts.emit()
 
         # cancel default animation if any
         '''
@@ -1120,18 +1110,9 @@ class PetWidget(QWidget):
         # reload new pet
         self.init_conf(pet_name)
 
-        # Change status
-        self.pet_hp.init_HP(settings.pet_data.hp, sys_hp_interval) #2)
-        self.pet_fv.init_FV(settings.pet_data.fv, settings.pet_data.fv_lvl)
-
-        # Change status related behavior
-        #self.workers['Animation'].hpchange(settings.pet_data.hp_tier, None)
-        #self.workers['Animation'].fvchange(settings.pet_data.fv_lvl)
-
         # Update Backpack
         #self._init_Inventory()
         self.refresh_bag.emit()
-        self.refresh_acts.emit()
 
         self.change_note.emit()
         self.repaint()
@@ -1159,9 +1140,8 @@ class PetWidget(QWidget):
         pic_dict = _load_all_pic(pet_name)
         self.pet_conf = PetConfig.init_config(self.curr_pet_name, pic_dict) #settings.size_factor)
         
-        self.margin_value = 0 #0.1 * max(self.pet_conf.width, self.pet_conf.height) # 用于将widgets调整到合适的大小
-        # Add customized animation
-        settings.act_data.init_actData(pet_name, settings.pet_data.hp_tier, settings.pet_data.fv_lvl)
+        self.margin_value = 0
+        settings.act_data.init_actData(pet_name, settings.pet_data.hp_tier)
         self._load_custom_anim()
         settings.pet_conf = self.pet_conf
 
@@ -1215,41 +1195,6 @@ class PetWidget(QWidget):
 
     def updateList(self):
         self.workers['Animation'].update_prob()
-
-    def _addNewAct(self, act_name):
-        acts_config = settings.act_data.allAct_params[settings.petname]
-        act_conf = acts_config[act_name]
-
-        # Add to pet_conf
-        acts = []
-        for act in act_conf.get('act_list', []):
-            acts.append(self._prepare_act_obj(act))
-        accs = []
-        for act in act_conf.get('acc_list', []):
-            accs.append(self._prepare_act_obj(act))
-        self.pet_conf.custom_act[act_name] = {"act_list": acts,
-                                                "acc_list": accs,
-                                                "anchor": act_conf.get('anchor_list',[]),
-                                                "act_type": act_conf['status_type']}
-        # update random action prob
-        self.updateList()
-        # Add to menu
-        if act_conf['unlocked']:
-            select_act = _build_act(act_name, self.act_menu, self._show_act)
-            self.select_acts.append(select_act)
-            self.act_menu.addAction(select_act)
-    
-    def _deleteAct(self, act_name):
-        # delete from self.pet_config
-        self.pet_conf.custom_act.pop(act_name)
-        # update random action prob
-        self.updateList()
-
-        # delete from menu
-        act_index = [acti.text() for acti in self.select_acts].index(act_name)
-        self.act_menu.removeAction(self.select_acts[act_index])
-        self.select_acts.remove(self.select_acts[act_index])
-
 
     def _setup_ui(self):
 
@@ -1380,33 +1325,8 @@ class PetWidget(QWidget):
 
 
     def _change_status(self, status, change_value, from_mod='Scheduler', send_note=False):
-        # Check system status
-        if from_mod == 'Scheduler' and is_system_locked() and settings.auto_lock:
-            print("System locked, skip HP and FV changes")
-            return
-        if status not in ['hp','fv']:
-            return
-        elif status == 'hp':
-            
-            diff = self.pet_hp.updateValue(change_value, from_mod)
-
-        elif status == 'fv':
-            
-            diff = self.pet_fv.updateValue(change_value, from_mod)
-
-        if send_note:
-
-            if diff > 0:
-                diff = '+%s'%diff
-            elif diff < 0:
-                diff = str(diff)
-            else:
-                return
-            if status == 'hp':
-                message = self.tr('Satiety') + " " f'{diff}'
-            else:
-                message = self.tr('Favorability') + " " f'{diff}' #'好感度 %s'%diff
-            self.register_notification('status_%s'%status, message)
+        # Lite version: HP/FV system removed
+        pass
         
         # Periodically triggered events
         if status == 'hp' and from_mod == 'Scheduler': # avoid being called in both hp and fv
@@ -1532,26 +1452,6 @@ class PetWidget(QWidget):
             y = self.pos().y()+self.height()
             self.setup_acc.emit(accs, x, y)
         '''
-        
-        # 使用物品 改变数值
-        self._change_status('hp', 
-                            int(settings.items_data.item_dict[item_name]['effect_HP']*reward_factor),
-                            from_mod='inventory', send_note=True)
-        
-        if item_name in self.pet_conf.item_favorite:
-            self._change_status('fv',
-                                int(settings.items_data.item_dict[item_name]['effect_FV']*self.pet_conf.item_favorite[item_name]*reward_factor),
-                                from_mod='inventory', send_note=True)
-
-        elif item_name in self.pet_conf.item_dislike:
-            self._change_status('fv', 
-                                int(settings.items_data.item_dict[item_name]['effect_FV']*self.pet_conf.item_dislike[item_name]*reward_factor),
-                                from_mod='inventory', send_note=True)
-
-        else:
-            self._change_status('fv', 
-                                int(settings.items_data.item_dict[item_name]['effect_FV']*reward_factor),
-                                from_mod='inventory', send_note=True)
 
     def add_item(self, n_items, item_names=[]):
         self.addItem_toInven.emit(n_items, item_names)
@@ -1888,7 +1788,6 @@ class PetWidget(QWidget):
         self.threads['Scheduler'].started.connect(self.workers['Scheduler'].run)
         self.workers['Scheduler'].sig_settext_sche.connect(self.register_notification) #_set_dialogue_dp)
         self.workers['Scheduler'].sig_setact_sche.connect(self._show_act)
-        self.workers['Scheduler'].sig_setstat_sche.connect(self._change_status)
         self.workers['Scheduler'].sig_focus_end.connect(self.change_focus_menu)
         self.workers['Scheduler'].sig_tomato_end.connect(self.change_tomato_menu)
         self.workers['Scheduler'].sig_settime_sche.connect(self._change_time)

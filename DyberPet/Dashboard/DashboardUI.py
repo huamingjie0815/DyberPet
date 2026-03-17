@@ -10,7 +10,6 @@ from qfluentwidgets import FluentIcon as FIF
 
 from .statusUI import statusInterface
 from .taskUI import taskInterface
-from .animationUI import animationInterface
 
 from sys import platform
 import DyberPet.settings as settings
@@ -25,7 +24,6 @@ class DashboardMainWindow(FluentWindow):
         # create sub interface
         self.statusInterface = statusInterface(sizeHintdb=(minWidth, minHeight), parent=self)
         self.taskInterface = taskInterface(sizeHintdb=(minWidth, minHeight), parent=self)
-        self.animInterface = animationInterface(sizeHintdb=(minWidth, minHeight), parent=self)
 
         self.initNavigation()
         self.setMinimumSize(minWidth, minHeight)
@@ -40,9 +38,6 @@ class DashboardMainWindow(FluentWindow):
         self.addSubInterface(self.taskInterface,
                              QIcon(os.path.join(basedir, "res/icons/Dashboard/task.svg")),
                              self.tr('Daily Tasks'))
-        self.addSubInterface(self.animInterface,
-                             QIcon(os.path.join(basedir, "res/icons/Dashboard/videoEdit.svg")),
-                             self.tr('Animation'))
 
         self.navigationInterface.setExpandWidth(150)
 

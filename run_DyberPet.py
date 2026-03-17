@@ -14,7 +14,6 @@ from PySide6.QtCore import Qt, QLocale, QTimer, QDateTime, QDate, Signal, QTime
 
 from qfluentwidgets import  FluentTranslator, setThemeColor
 from DyberPet.DyberSettings.DyberControlPanel import ControlMainWindow
-from DyberPet.Dashboard.DashboardUI import DashboardMainWindow
 
 try:
     size_factor = 1 #ctypes.windll.shcore.GetScaleFactorForDevice(0) / 100

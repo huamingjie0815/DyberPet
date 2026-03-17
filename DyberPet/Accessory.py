@@ -1,34 +1,20 @@
-import sys
 from sys import platform
-import time
 import math
 import uuid
-import types
 import random
-import inspect
-from typing import List
 import pynput.mouse as mouse
-from datetime import datetime, timedelta
 
-
-from apscheduler.schedulers.qt import QtScheduler
-from apscheduler.triggers import interval, date, cron
-
-from PySide6.QtCore import Qt, QTimer, QObject, QPoint, QUrl, QEvent, QRectF, QRect, QSize
-from PySide6.QtGui import QImage, QPixmap, QIcon, QCursor,QPainter
-from PySide6.QtGui import QFont, QTransform, QAction
-
+from PySide6.QtCore import Qt, QTimer, QObject, QPoint, Signal
+from PySide6.QtGui import QPixmap, QCursor, QPainter, QTransform, QAction
 from PySide6.QtWidgets import *
-from PySide6.QtCore import QObject, QThread, Signal
-#from PySide6.QtMultimedia import QSoundEffect, QMediaPlayer, QMediaContent
 
 from qfluentwidgets import RoundMenu, Action
 from qfluentwidgets import FluentIcon as FIF
 
 from DyberPet.utils import *
 from DyberPet.conf import *
-#from DyberPet.extra_windows import DPDialogue
-from DyberPet.custom_widgets import DPDialogue, MenuSlider
+
+from DyberPet.custom_widgets import DPDialogue
 import DyberPet.settings as settings
 '''
 try:

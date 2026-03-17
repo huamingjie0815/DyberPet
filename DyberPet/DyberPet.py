@@ -1,19 +1,15 @@
 import sys
 from sys import platform
-import time
 import math
-import types
 import random
-import inspect
 import webbrowser
-from typing import List
 from pathlib import Path
 import pynput.mouse as mouse
 
 from PySide6.QtWidgets import *
 from PySide6.QtCore import Qt, QTimer, QObject, QPoint, QEvent, QElapsedTimer
-from PySide6.QtCore import QObject, QThread, Signal, QRectF, QRect, QSize, QPropertyAnimation, QAbstractAnimation
-from PySide6.QtGui import QImage, QPixmap, QIcon, QCursor, QPainter, QFont, QFontMetrics, QAction, QBrush, QPen, QColor, QFontDatabase, QPainterPath, QRegion, QIntValidator, QDoubleValidator
+from PySide6.QtCore import QThread, Signal, QRectF, QRect, QSize
+from PySide6.QtGui import QImage, QPixmap, QIcon, QCursor, QPainter, QFont, QFontMetrics, QAction, QBrush, QPen, QColor, QPainterPath, QRegion
 
 from qfluentwidgets import CaptionLabel, setFont, Action #,RoundMenu
 from qfluentwidgets import FluentIcon as FIF
@@ -1304,11 +1300,11 @@ class PetWidget(QWidget):
         :return:
         """
         if self.tray is None:
-            self.tray = SystemTray(self.StatMenu, self) #QSystemTrayIcon(self)
+            self.tray = SystemTray(self.StatMenu, self)
             self.tray.setIcon(QIcon(os.path.join(basedir, 'res/icons/icon.png')))
             self.tray.show()
         else:
-            self.tray.setMenu(self.StatMenu)
+            self.tray.setContextMenu(self.StatMenu)
             self.tray.show()
 
     def reset_size(self, setImg=True):

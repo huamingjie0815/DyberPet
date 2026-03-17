@@ -1,9 +1,9 @@
 # coding:utf-8
 import os
-from PySide6.QtWidgets import (QWidget, QApplication, QSystemTrayIcon, QMenu, QHBoxLayout,
-                               QFrame, QLabel, QSpacerItem, QSizePolicy, QVBoxLayout, 
+from PySide6.QtWidgets import (QWidget, QSystemTrayIcon, QHBoxLayout,
+                               QFrame, QLabel, QSpacerItem, QSizePolicy, QVBoxLayout,
                                QLayout, QProgressBar)
-from PySide6.QtGui import (QIcon, QAction, QCursor, QImage, QPixmap, QColor,
+from PySide6.QtGui import (QCursor, QPixmap, QColor,
                            QPainter, QBrush, QPen, QPainterPath, QFont, QFontMetrics)
 from PySide6.QtCore import Qt, QPoint, Signal, QSize, QRectF
 
@@ -18,35 +18,21 @@ basedir = settings.BASEDIR
 
 
 class SystemTray(QSystemTrayIcon):
-    def __init__(self, menu, parent=None):
+    def __init__(self, menu=None, parent=None):
         super(SystemTray, self).__init__(parent)
 
-        # Set an icon for the tray
-        self.setIcon(QIcon('path_to_your_icon.png'))
+        if menu:
+            self.setContextMenu(menu)
 
-        # Set the provided menu for the tray
-        self.setMenu(menu)
-
-        # Connect the activated signal to our custom slot
         self.activated.connect(self.on_tray_icon_activated)
 
     def on_tray_icon_activated(self, reason):
         if reason == QSystemTrayIcon.Context:
-            # Get the current position of the cursor
-            cursor_pos = QCursor.pos() #QApplication.primaryScreen().cursor().pos() #QApplication.desktop().cursor().pos()
-
-            # Adjust the position. Here, we're moving it 100 pixels upward.
-            new_pos = cursor_pos - QPoint(0, self.contextMenu().height()-20)
-            self.contextMenu().popup(new_pos)
-
-    def setMenu(self, menu):
-        """ Set a new context menu for the tray """
-        old_menu = self.contextMenu()
-        if old_menu:
-            old_menu.hide()
-            old_menu.deleteLater()
-            
-        super().setContextMenu(menu)
+            cursor_pos = QCursor.pos()
+            menu = self.contextMenu()
+            if menu:
+                new_pos = cursor_pos - QPoint(0, menu.height() - 20)
+                menu.popup(new_pos)
 
 
 
@@ -99,15 +85,15 @@ class DPDialogue(QWidget):
 
         # The Round Dialogue Frame
         self.frame = QFrame()
-        self.frame.setStyleSheet(f'''
-            QFrame {{
+        self.frame.setStyleSheet('''
+            QFrame {
                 border: 1px solid black;
-                border-radius: 4px; 
+                border-radius: 4px;
                 background: rgb(255, 255, 255);
-            }}
-            QLabel{{
+            }
+            QLabel{
                 border: 0px
-            }}
+            }
         ''')
 
         self.verticalLayout = QVBoxLayout(self)
@@ -369,7 +355,6 @@ class RoundBarBase(QProgressBar):
         painter.setFont(font)
         #painter.drawText(full_rect, Qt.AlignCenter, text)
         font_metrics = QFontMetrics(font)
-        text_height = font_metrics.height()
         # Draw text in the calculated position
         painter.drawText(full_rect.adjusted(0, -font_metrics.descent()//2, 0, 0), Qt.AlignCenter, text)
 

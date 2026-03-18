@@ -4,7 +4,7 @@ from datetime import datetime
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QColor
-from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QScrollArea, QLineEdit, QPushButton, QSizePolicy
+from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QScrollArea, QLineEdit, QPushButton, QSizePolicy, QSpacerItem
 
 from qfluentwidgets import FluentIcon as FIF, ExpandLayout
 from qfluentwidgets import BodyLabel, CaptionLabel, setFont, CardWidget
@@ -231,6 +231,9 @@ class ChatCardGroup(QWidget):
 
         self.inputPanel.messageSubmitted.connect(self._on_message_submitted)
 
+        self._streaming_widget = None
+        self._init_openclaw_client()
+
         self.setMinimumHeight(500)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
 
@@ -243,6 +246,59 @@ class ChatCardGroup(QWidget):
             }
         """)
 
+    def _init_openclaw_client(self):
+        """Initialize OpenClaw client if enabled"""
+        from PySide6.QtCore import QTimer
+        if settings.openclaw_enabled and settings.openclaw_token:
+            from DyberPet.OpenClawClient import OpenClawWebSocketClient
+            self._openclaw = OpenClawWebSocketClient(
+                settings.openclaw_url,
+                settings.openclaw_token
+            )
+            QTimer.singleShot(100, self._connect_openclaw_signals)
+        else:
+            self._openclaw = None
+
+    def _connect_openclaw_signals(self):
+        if self._openclaw:
+            print("[ChatUI] Connecting OpenClaw signals...")
+            self._openclaw.message_received.connect(self._on_pet_message_received)
+            self._openclaw.stream_delta.connect(self._on_stream_delta)
+            self._openclaw.error_occurred.connect(self._on_openclaw_error)
+            self._openclaw.start_connection()
+            print("[ChatUI] OpenClaw connection started")
+
+    def _on_pet_message_received(self, content: str):
+        print(f"[ChatUI] Received message: {content}")
+        if self._streaming_widget:
+            self._streaming_widget.deleteLater()
+            self._streaming_widget = None
+        pet_message = ChatMessage(sender="pet", content=content)
+        self.messageList.add_message(pet_message)
+
+    def _on_stream_delta(self, content: str):
+        if self._streaming_widget is None:
+            msg = ChatMessage(sender="pet", content=content)
+            self._streaming_widget = ChatMessageWidget(msg)
+            self.messageList.vBoxLayout.insertWidget(
+                self.messageList.vBoxLayout.count() - 1,
+                self._streaming_widget,
+            )
+            self.messageList._scroll_to_bottom()
+        else:
+            bubble = self._streaming_widget.findChild(CardWidget, "chatBubble")
+            if bubble:
+                label = bubble.findChild(BodyLabel)
+                if label:
+                    label.setText(content)
+                    self.messageList._scroll_to_bottom()
+
+    def _on_openclaw_error(self, error: str):
+        """Handle OpenClaw error"""
+        print(f"[ChatUI] Error: {error}")
+        pet_message = ChatMessage(sender="pet", content=f"Connection error: {error}")
+        self.messageList.add_message(pet_message)
+
     def adjustSize(self):
         """ Adjust widget size based on content """
         width = self.sizeHintDyber[0] - 50 if self.sizeHintDyber else 450
@@ -252,8 +308,11 @@ class ChatCardGroup(QWidget):
         user_message = ChatMessage(sender="user", content=text)
         self.messageList.add_message(user_message)
 
-        pet_message = ChatMessage(sender="pet", content="Chat feature is under development. More features coming soon!")
-        self.messageList.add_message(pet_message)
+        if self._openclaw and self._openclaw.is_connected():
+            self._openclaw.send_message(text)
+        else:
+            pet_message = ChatMessage(sender="pet", content="Chat feature is under development. More features coming soon!")
+            self.messageList.add_message(pet_message)
 
     def clear(self):
         """ Clear all messages """

@@ -84,10 +84,17 @@ ITEM_BGC = {'consumable': '#EFEBDF',
 ITEM_BGC_DEFAULT = '#EFEBDF'
 ITEM_BDC = '#B1C790'
 
-# when falling met the screen boundary, 
+# when falling met the screen boundary,
 # it will be bounced back with this speed decay factor
 SPEED_DECAY = 0.5
 AUTOFEED_THRESHOLD = 60
+
+# OpenClaw Gateway settings
+openclaw_enabled = False
+openclaw_url = "ws://127.0.0.1:18789"
+openclaw_token = ""
+openclaw_auto_reconnect = True
+
 
 def init():
     global platform
@@ -208,7 +215,8 @@ def init_settings():
 
     global gravity, fixdragspeedx, fixdragspeedy, tunable_scale, scale_dict, volume, \
            language_code, on_top_hint, default_pet, defaultAct, themeColor, minipet_scale, \
-           toaster_on, usertag_dict, auto_lock, bubble_on
+           toaster_on, usertag_dict, auto_lock, bubble_on, \
+           openclaw_enabled, openclaw_url, openclaw_token, openclaw_auto_reconnect
 
     # check json file integrity
     try:
@@ -293,6 +301,13 @@ def init_settings():
         bubble_on = data_params.get('bubble_on', True)
         #=====================================================
 
+        # OpenClaw settings
+        openclaw_enabled = data_params.get('openclaw_enabled', False)
+        openclaw_url = data_params.get('openclaw_url', "ws://127.0.0.1:18789")
+        openclaw_token = data_params.get('openclaw_token', "")
+        openclaw_auto_reconnect = data_params.get('openclaw_auto_reconnect', True)
+        #=====================================================
+
     else:
         fixdragspeedx, fixdragspeedy = 1.0, 1.0
         gravity = 0.1
@@ -313,13 +328,18 @@ def init_settings():
         bubble_on = True
         usertag_dict = {}
         auto_lock = False
+        openclaw_enabled = False
+        openclaw_url = "ws://127.0.0.1:18789"
+        openclaw_token = ""
+        openclaw_auto_reconnect = True
     check_locale()
     save_settings()
 
 def save_settings():
     global file_path, set_fall, gravity, fixdragspeedx, fixdragspeedy, scale_dict, volume, \
            language_code, on_top_hint, default_pet, defaultAct, themeColor, minipet_scale, \
-           toaster_on, usertag_dict, auto_lock, bubble_on
+           toaster_on, usertag_dict, auto_lock, bubble_on, \
+           openclaw_enabled, openclaw_url, openclaw_token, openclaw_auto_reconnect
 
     data_js = {'gravity':gravity,
                'set_fall': set_fall,
@@ -336,7 +356,11 @@ def save_settings():
                'defaultAct':defaultAct,
                'language_code':language_code,
                'themeColor':themeColor,
-               'auto_lock':auto_lock
+               'auto_lock':auto_lock,
+               'openclaw_enabled':openclaw_enabled,
+               'openclaw_url':openclaw_url,
+               'openclaw_token':openclaw_token,
+               'openclaw_auto_reconnect':openclaw_auto_reconnect
                }
 
     with open(file_path, 'w', encoding='utf-8') as f:

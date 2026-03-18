@@ -16,6 +16,7 @@ pip install pynput==1.7.6
 pip install PySide6-Fluent-Widgets==1.5.4 -i https://pypi.org/simple/
 pip install pyside6==6.5.2
 pip install tendo
+pip install websocket-client
 ```
 
 **CRITICAL**: All development and testing must be done within the `Dyber_pyside` conda environment.

@@ -15,7 +15,7 @@ from PySide6.QtGui import QDesktopServices, QIcon
 from PySide6.QtWidgets import QWidget, QLabel, QApplication, QFileDialog, QSizePolicy, QHBoxLayout, QSpacerItem
 
 from .custom_utils import DyberToolBottonCard, QuickSaveCard, SaveCardGroup, LineEditDialog
-from .fileOp_utils import CopySave, DeleteQuickSave
+from .file_op_utils import CopySave, DeleteQuickSave
 import DyberPet.settings as settings
 basedir = settings.BASEDIR
 module_path = os.path.join(basedir, 'DyberPet/DyberSettings/')

@@ -33,7 +33,7 @@ from .custom_base import HyperlinkButton as DyperlinkButton
 from .custom_combobox import ComboBox
 
 import DyberPet.settings as settings
-from DyberPet.conf import load_ItemMod
+from DyberPet.config import load_ItemMod
 from DyberPet.utils import text_wrap
 
 from sys import platform

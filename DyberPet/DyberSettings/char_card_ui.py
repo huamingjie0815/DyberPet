@@ -17,7 +17,7 @@ from PySide6.QtGui import QDesktopServices, QIcon, QFont
 from PySide6.QtWidgets import QWidget, QLabel, QApplication, QFileDialog, QSizePolicy, QHBoxLayout, QSpacerItem
 
 from .custom_utils import CharCard, CharCardGroup, CharLine
-from DyberPet.conf import CheckCharFiles
+from DyberPet.config import CheckCharFiles
 import DyberPet.settings as settings
 
 from sys import platform

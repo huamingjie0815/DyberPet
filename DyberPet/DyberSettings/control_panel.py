@@ -9,12 +9,12 @@ from qfluentwidgets import (NavigationItemPosition, MessageBox, setTheme, Theme,
                             NavigationSeparator)
 from qfluentwidgets import FluentIcon as FIF
 
-from .BasicSettingUI import SettingInterface
-from .GameSaveUI import SaveInterface
-from .CharCardUI import CharInterface
-from .ChatUI import ChatInterface
-from DyberPet.Dashboard.statusUI import statusInterface
-from DyberPet.Dashboard.taskUI import taskInterface
+from .basic_setting_ui import SettingInterface
+from .game_save_ui import SaveInterface
+from .char_card_ui import CharInterface
+from .chat_ui import ChatInterface
+from DyberPet.Dashboard.status_ui import statusInterface
+from DyberPet.Dashboard.task_ui import taskInterface
 from sys import platform
 import DyberPet.settings as settings
 basedir = settings.BASEDIR
@@ -43,16 +43,16 @@ class ControlMainWindow(FluentWindow):
         # add sub interface - grouped under one control panel
         self.addSubInterface(self.statusInterface,
                              QIcon(os.path.join(basedir, "res/icons/dashboard.svg")),
-                             self.tr('Status'))
-        self.addSubInterface(self.taskInterface,
-                             FIF.ALIGNMENT,
-                             self.tr('Tasks'))
-        self.addSubInterface(self.gamesaveInterface,
-                             FIF.SAVE,
-                             self.tr('Game Save'))
+                             self.tr('Home'))
         self.addSubInterface(self.charCardInterface,
                              QIcon(os.path.join(basedir, "res/icons/system/character.svg")),
                              self.tr('Characters'))
+        self.addSubInterface(self.taskInterface,
+                             FIF.ALIGNMENT,
+                             self.tr('Focus'))
+        self.addSubInterface(self.gamesaveInterface,
+                             FIF.SAVE,
+                             self.tr('Save & Load'))
         self.addSubInterface(self.chatInterface,
                              FIF.CHAT,
                              self.tr('Chat'))

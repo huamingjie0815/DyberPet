@@ -4,16 +4,16 @@ import ctypes
 from tendo import singleton
 import os
 from DyberPet.utils import read_json
-from DyberPet.DyberPet import PetWidget
-from DyberPet.Notification import DPNote
-from DyberPet.Accessory import DPAccessory
+from DyberPet.pet_widget import PetWidget
+from DyberPet.notification import DPNote
+from DyberPet.accessory import DPAccessory
 
 from PySide6.QtWidgets import QApplication
 from PySide6 import QtCore
 from PySide6.QtCore import Qt, QLocale, QTimer, QDateTime, QDate, Signal, QTime
 
 from qfluentwidgets import  FluentTranslator, setThemeColor
-from DyberPet.DyberSettings.DyberControlPanel import ControlMainWindow
+from DyberPet.DyberSettings.control_panel import ControlMainWindow
 
 try:
     size_factor = 1 #ctypes.windll.shcore.GetScaleFactorForDevice(0) / 100

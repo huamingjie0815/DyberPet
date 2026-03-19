@@ -708,7 +708,7 @@ scale_dict: dict              # 宠物缩放因子
 minipet_scale: dict           # 小宠物缩放
 
 # 主题配置
-DEFAULT_THEME_COL: str = "#009faa"
+DEFAULT_THEME_COL: str = "#8BA5C8"
 themeColor: str               # 当前主题颜色
 language_code: str = "zh_CN"  # 当前语言
 ```

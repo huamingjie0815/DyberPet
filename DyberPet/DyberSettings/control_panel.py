@@ -2,7 +2,7 @@
 import os
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
-from qfluentwidgets import FluentWindow
+from qfluentwidgets import FluentWindow, NavigationItemPosition
 from qfluentwidgets import FluentIcon as FIF
 
 from .basic_setting_ui import SettingInterface
@@ -27,6 +27,12 @@ class MainPanel(FluentWindow):
         self.addSubInterface(self.chatInterface, FIF.CHAT, self.tr('Chat'))
         self.addSubInterface(self.settingInterface, FIF.SETTING, self.tr('Settings'))
         self.navigationInterface.setExpandWidth(200)
+
+        self.navigationInterface.setStyleSheet("""
+            QStackedWidget {
+                background-color: #FFFCF9;
+            }
+        """)
 
     def initWindow(self):
         self.setWindowIcon(QIcon(os.path.join(basedir, "res/icons/SystemPanel.png")))

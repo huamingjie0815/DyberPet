@@ -499,20 +499,21 @@ class DyberToaster(QFrame):
         frame = QFrame()
         frame.setStyleSheet('''
             QFrame {
-                border: 1px solid black;
-                border-radius: 6px;
-                background: rgb(255, 255, 255);
+                border: 1px solid rgba(200, 190, 180, 0.4);
+                border-radius: 12px;
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 252, 0.95), stop:1 rgba(255, 250, 245, 0.92));
             }
             QLabel{
                 border: 0px;
-                font: 14px 'Segoe UI', 'Microsoft YaHei', 'PingFang SC';
-                color: black;
+                font: 13px 'PingFang SC', 'Microsoft YaHei', 'Segoe UI';
+                color: #4A4A4A;
                 background-color: transparent;
             }
         ''')
+        self.frame = frame
         # Layout
         self.hBoxLayout = QHBoxLayout()
-        self.hBoxLayout.setContentsMargins(10, 10, 10, 10)
+        self.hBoxLayout.setContentsMargins(12, 10, 12, 10)
         self.hBoxLayout.setSizeConstraint(QVBoxLayout.SetMinimumSize)
 
         # add icon to layout
@@ -587,6 +588,13 @@ class DyberToaster(QFrame):
             # SubWindow not work in MacOS
             self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint |
             Qt.BypassWindowManagerHint | Qt.NoDropShadowWindowHint)
+
+        # Add shadow effect
+        shadow = QGraphicsDropShadowEffect(self)
+        shadow.setBlurRadius(15)
+        shadow.setColor(QColor(100, 80, 60, 50))
+        shadow.setOffset(0, 3)
+        self.frame.setGraphicsEffect(shadow)
 
         # raise the widget and adjust its size to the minimum
         self.raise_()
@@ -739,20 +747,21 @@ class BubbleText(QFrame):
         frame = QFrame()
         frame.setStyleSheet('''
             QFrame {
-                border: 1px solid rgb(0, 0, 0);
-                border-radius: 10px;
-                background: rgba(255, 255, 255, 220);
+                border: 1px solid rgba(200, 190, 180, 0.5);
+                border-radius: 14px;
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 252, 0.95), stop:1 rgba(255, 250, 245, 0.92));
             }
             QLabel{
                 border: 0px;
-                font: 14px 'Segoe UI', 'Microsoft YaHei', 'PingFang SC';
-                color: rgba(25, 25, 25, 245);
+                font: 13px 'PingFang SC', 'Microsoft YaHei', 'Segoe UI';
+                color: #4A4A4A;
                 background-color: transparent;
             }
         ''')
+        self.frame = frame
         # Layout
         self.hBoxLayout = QHBoxLayout()
-        self.hBoxLayout.setContentsMargins(10, 10, 10, 10)
+        self.hBoxLayout.setContentsMargins(12, 10, 12, 10)
         self.hBoxLayout.setSizeConstraint(QVBoxLayout.SetMinimumSize)
 
         # add icon to layout
@@ -833,6 +842,13 @@ class BubbleText(QFrame):
             # SubWindow not work in MacOS
             self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint |
             Qt.BypassWindowManagerHint | Qt.NoDropShadowWindowHint)
+
+        # Add shadow effect
+        shadow = QGraphicsDropShadowEffect(self)
+        shadow.setBlurRadius(15)
+        shadow.setColor(QColor(100, 80, 60, 50))
+        shadow.setOffset(0, 3)
+        self.frame.setGraphicsEffect(shadow)
 
         # raise the widget and adjust its size to the minimum
         self.raise_()

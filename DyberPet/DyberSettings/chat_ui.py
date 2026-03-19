@@ -28,20 +28,20 @@ except ImportError:
 
 _BUBBLE_USER_CSS = """
     body { margin:0; padding:0; background:transparent; }
-    p { margin:0 0 4px 0; color: white; font-size:13px; }
-    code { background: rgba(255,255,255,0.2); border-radius:3px; padding: 1px 4px; }
-    pre { background: rgba(0,0,0,0.2); border-radius:6px; padding:8px; overflow-x:auto; }
+    p { margin:0 0 4px 0; color: #FFFFFF; font-size:13px; line-height:1.5; font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    code { background: rgba(255,255,255,0.25); border-radius:4px; padding: 2px 6px; font-family: 'SF Mono', 'Consolas', monospace; }
+    pre { background: rgba(0,0,0,0.2); border-radius:8px; padding:10px; overflow-x:auto; }
     table { border-collapse:collapse; width:100%; }
-    td, th { border: 1px solid rgba(255,255,255,0.3); padding:4px 8px; }
+    td, th { border: 1px solid rgba(255,255,255,0.35); padding:6px 10px; }
 """
 
 _BUBBLE_PET_CSS = """
     body { margin:0; padding:0; background:transparent; }
-    p { margin:0 0 4px 0; color: #333333; font-size:13px; }
-    code { background: rgba(0,0,0,0.07); border-radius:3px; padding: 1px 4px; }
-    pre { background: rgba(0,0,0,0.07); border-radius:6px; padding:8px; overflow-x:auto; }
+    p { margin:0 0 4px 0; color: #4A4A4A; font-size:13px; line-height:1.5; font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    code { background: rgba(0,0,0,0.06); border-radius:4px; padding: 2px 6px; font-family: 'SF Mono', 'Consolas', monospace; }
+    pre { background: rgba(0,0,0,0.05); border-radius:8px; padding:10px; overflow-x:auto; }
     table { border-collapse:collapse; width:100%; }
-    td, th { border: 1px solid #cccccc; padding:4px 8px; }
+    td, th { border: 1px solid #E8E0D8; padding:6px 10px; }
 """
 
 
@@ -91,37 +91,67 @@ class ChatMessageWidget(QWidget):
     def _init_ui(self):
         self.setFixedWidth(CHAT_MESSAGE_MAX_WIDTH + 40)
         self.hBoxLayout = QHBoxLayout(self)
-        self.hBoxLayout.setContentsMargins(12, 8, 12, 8)
-        self.hBoxLayout.setSpacing(8)
+        self.hBoxLayout.setContentsMargins(12, 6, 12, 6)
+        self.hBoxLayout.setSpacing(10)
 
-        bubble = CardWidget(self)
+        bubble = QFrame(self)
         bubble.setFixedWidth(CHAT_MESSAGE_MAX_WIDTH)
         bubble.setObjectName("chatBubble")
 
-        vBox = QVBoxLayout(bubble)
-        vBox.setContentsMargins(14, 10, 14, 10)
+        if self.is_user:
+            bubble.setStyleSheet("""
+                #chatBubble {
+                    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #A8C8F0, stop:1 #7BA7E8);
+                    border-radius: 18px 18px 6px 18px;
+                    border: none;
+                    padding: 2px;
+                }
+            """)
+            innerBubble = QFrame(bubble)
+            innerBubble.setStyleSheet("""
+                background: transparent;
+                border-radius: 16px 16px 4px 16px;
+            """)
+        else:
+            bubble.setStyleSheet("""
+                #chatBubble {
+                    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #FFF9F0, stop:1 #FFF5E8);
+                    border-radius: 18px 18px 18px 6px;
+                    border: 1px solid #F0E6D8;
+                    padding: 2px;
+                }
+            """)
+            innerBubble = QFrame(bubble)
+            innerBubble.setStyleSheet("""
+                background: transparent;
+                border-radius: 16px 16px 16px 4px;
+            """)
+
+        bubbleLayout = QVBoxLayout(bubble)
+        bubbleLayout.setContentsMargins(0, 0, 0, 0)
+        bubbleLayout.addWidget(innerBubble)
+
+        vBox = QVBoxLayout(innerBubble)
+        vBox.setContentsMargins(14, 10, 14, 8)
         vBox.setSpacing(4)
 
-        self.contentBubble = MarkdownBubble(self._content, self.is_user, bubble)
+        self.contentBubble = MarkdownBubble(self._content, self.is_user, innerBubble)
         timeLabel = CaptionLabel(self.timestamp.strftime("%H:%M"))
         timeLabel.setObjectName("chatTime")
 
+        if self.is_user:
+            timeLabel.setStyleSheet("#chatTime { color: rgba(255,255,255,180); font-size: 11px; }")
+        else:
+            timeLabel.setStyleSheet("#chatTime { color: #B0A090; font-size: 11px; }")
+
         vBox.addWidget(self.contentBubble)
-        vBox.addWidget(timeLabel)
+        vBox.addWidget(timeLabel, 0, Qt.AlignRight)
 
         if self.is_user:
-            bubble.setStyleSheet("""
-                #chatBubble { background-color: #4A90D9; border: none; }
-                #chatTime { color: rgba(255,255,255,160); }
-            """)
             self.hBoxLayout.addItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
-            self.hBoxLayout.addWidget(bubble)
+            self.hBoxLayout.addWidget(bubble, 0, Qt.AlignRight | Qt.AlignVCenter)
         else:
-            bubble.setStyleSheet("""
-                #chatBubble { background-color: #F5F5F5; border: none; }
-                #chatTime { color: #999999; }
-            """)
-            self.hBoxLayout.addWidget(bubble)
+            self.hBoxLayout.addWidget(bubble, 0, Qt.AlignLeft | Qt.AlignVCenter)
             self.hBoxLayout.addItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
     def update_content(self, content: str):
@@ -134,37 +164,82 @@ class GatewayBar(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.setFixedHeight(52)
+        self.setFixedHeight(56)
         self.setObjectName("gatewayBar")
 
         hbox = QHBoxLayout(self)
-        hbox.setContentsMargins(12, 8, 12, 8)
-        hbox.setSpacing(8)
+        hbox.setContentsMargins(16, 10, 16, 10)
+        hbox.setSpacing(12)
 
         self.charCombo = QComboBox(self)
-        self.charCombo.setFixedHeight(32)
+        self.charCombo.setFixedHeight(34)
         self.charCombo.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.charCombo.setStyleSheet("""
+            QComboBox {
+                background: rgba(255, 255, 255, 0.7);
+                border: 1px solid #E0D8D0;
+                border-radius: 8px;
+                padding: 4px 12px;
+                font-size: 13px;
+                color: #5A5A5A;
+            }
+            QComboBox:hover {
+                background: rgba(255, 255, 255, 0.9);
+                border: 1px solid #D0C8C0;
+            }
+            QComboBox::drop-down {
+                border: none;
+                width: 24px;
+            }
+            QComboBox::down-arrow {
+                image: url(none);
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-top: 5px solid #9A9A9A;
+                margin-right: 8px;
+            }
+        """)
 
         self.statusDot = QLabel("●", self)
-        self.statusDot.setFixedSize(18, 18)
+        self.statusDot.setFixedSize(20, 20)
         self.statusDot.setAlignment(Qt.AlignCenter)
+        self.statusDot.setStyleSheet("font-size: 12px;")
         self._set_status(False)
 
         self.portLabel = CaptionLabel("", self)
-        self.portLabel.setFixedHeight(18)
+        self.portLabel.setFixedHeight(20)
+        self.portLabel.setStyleSheet("color: #8A8A8A; font-size: 12px;")
 
         self.openBtn = QPushButton(self)
         self.openBtn.setIcon(FIF.GLOBE.icon())
-        self.openBtn.setFixedSize(32, 32)
+        self.openBtn.setFixedSize(34, 34)
         self.openBtn.setToolTip("Open OpenClaw WebUI")
+        self.openBtn.setStyleSheet("""
+            QPushButton {
+                background: rgba(120, 160, 220, 0.15);
+                border: 1px solid rgba(120, 160, 220, 0.3);
+                border-radius: 8px;
+            }
+            QPushButton:hover {
+                background: rgba(120, 160, 220, 0.25);
+                border: 1px solid rgba(120, 160, 220, 0.5);
+            }
+            QPushButton:pressed {
+                background: rgba(120, 160, 220, 0.35);
+            }
+        """)
 
-        hbox.addWidget(self.charCombo)
-        hbox.addWidget(self.statusDot)
-        hbox.addWidget(self.portLabel)
-        hbox.addWidget(self.openBtn)
+        hbox.addWidget(self.charCombo, 1)
+        hbox.addWidget(self.statusDot, 0, Qt.AlignVCenter)
+        hbox.addWidget(self.portLabel, 0, Qt.AlignVCenter)
+        hbox.addWidget(self.openBtn, 0, Qt.AlignVCenter)
 
         self.setStyleSheet("""
-            #gatewayBar { background: #F8F8F8; border-top: 1px solid #E0E0E0; border-radius: 0 0 12px 12px; }
+            #gatewayBar {
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 252, 248, 0.95), stop:1 rgba(255, 248, 240, 0.9));
+                border-top: 1px solid rgba(224, 212, 200, 0.5);
+                border-radius: 0 0 16px 16px;
+            }
         """)
 
         self.charCombo.currentTextChanged.connect(self._on_char_changed)
@@ -228,10 +303,11 @@ class ChatMessageList(QScrollArea):
 
     def add_message(self, sender: str, content: str, timestamp: datetime = None, prepend: bool = False):
         widget = ChatMessageWidget(sender, content, timestamp)
+        alignment = Qt.AlignRight if sender == "user" else Qt.AlignLeft
         if prepend:
-            self.vBoxLayout.insertWidget(1, widget)
+            self.vBoxLayout.insertWidget(1, widget, alignment=alignment)
         else:
-            self.vBoxLayout.insertWidget(self.vBoxLayout.count() - 1, widget)
+            self.vBoxLayout.insertWidget(self.vBoxLayout.count() - 1, widget, alignment=alignment)
             QTimer.singleShot(50, lambda: self.verticalScrollBar().setValue(self.verticalScrollBar().maximum()))
         return widget
 
@@ -264,9 +340,9 @@ class ChatInputPanel(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.setFixedHeight(64)
+        self.setFixedHeight(68)
         hbox = QHBoxLayout(self)
-        hbox.setContentsMargins(16, 10, 16, 10)
+        hbox.setContentsMargins(16, 12, 16, 12)
         hbox.setSpacing(12)
 
         self.inputEdit = QLineEdit(self)
@@ -284,12 +360,33 @@ class ChatInputPanel(QWidget):
         hbox.addWidget(self.sendButton)
 
         self.setStyleSheet("""
-            #chatInput { border: 1px solid #E0E0E0; border-radius: 22px; padding: 0 18px;
-                         font-size: 14px; background-color: #FAFAFA; }
-            #chatInput:focus { border: 2px solid #4A90D9; background-color: white; }
-            #chatSendButton { background-color: #4A90D9; border-radius: 22px; border: none; }
-            #chatSendButton:hover { background-color: #3A7BC8; }
-            #chatSendButton:pressed { background-color: #2D6BB0; }
+            #chatInput {
+                border: 1px solid #E0D8D0;
+                border-radius: 22px;
+                padding: 0 20px;
+                font-size: 14px;
+                background-color: #FFFDFB;
+                color: #4A4A4A;
+            }
+            #chatInput:focus {
+                border: 2px solid #9BB8E8;
+                background-color: white;
+            }
+            #chatInput::placeholder {
+                color: #B0A8A0;
+            }
+            #chatSendButton {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #9BB8E8, stop:1 #7BA7E0);
+                border-radius: 22px;
+                border: none;
+                icon-size: 18px;
+            }
+            #chatSendButton:hover {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #AEC8F2, stop:1 #8CB5EC);
+            }
+            #chatSendButton:pressed {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #7BA7E0, stop:1 #6A97D8);
+            }
         """)
 
         self.sendButton.clicked.connect(self._on_send)
@@ -335,7 +432,11 @@ class ChatCardGroup(QWidget):
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.setObjectName("chatCardGroup")
         self.setStyleSheet("""
-            #chatCardGroup { background-color: #FFFFFF; border-radius: 16px; border: 1px solid #E8E8E8; }
+            #chatCardGroup {
+                background-color: #FFFCF9;
+                border-radius: 20px;
+                border: 1px solid #F0E8E0;
+            }
         """)
 
         self._init_openclaw_client()

@@ -8,10 +8,47 @@ QScrollArea {
 }
 
 
-/* 标签 */
+/* Title */
 QLabel#settingLabel {
-    font: 33px 'Microsoft YaHei Light';
-    font-weight: bold;
+    font: 32px 'PingFang SC Light', 'Microsoft YaHei Light';
+    font-weight: 500;
     background-color: transparent;
+    color: #5A5A5A;
+    letter-spacing: 1px;
+}
+
+QLabel#chatTitle {
+    font: 28px 'PingFang SC Light', 'Microsoft YaHei Light';
+    font-weight: 500;
+    background-color: transparent;
+    color: #5A5A5A;
+    letter-spacing: 1px;
+}
+
+
+/* Smooth scrollbar */
+QScrollBar:vertical {
+    background: transparent;
+    width: 8px;
+    margin: 8px 4px 8px 4px;
+    border-radius: 4px;
+}
+
+QScrollBar::handle:vertical {
+    background: rgba(180, 170, 160, 0.3);
+    border-radius: 4px;
+    min-height: 40px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: rgba(180, 170, 160, 0.5);
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
 }
 

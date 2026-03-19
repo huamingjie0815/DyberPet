@@ -17,11 +17,9 @@ basedir = settings.BASEDIR
 class Scheduler_worker(QObject):
     sig_settext_sche = Signal(str, str, name='sig_settext_sche')
     sig_setact_sche = Signal(str, name='sig_setact_sche')
-    sig_setstat_sche = Signal(str, int, name='sig_setstat_sche')
     sig_focus_end = Signal(name='sig_focus_end')
     sig_tomato_end = Signal(name='sig_tomato_end')
     sig_settime_sche = Signal(str, int, name='sig_settime_sche')
-    sig_addItem_sche = Signal(int, name='sig_addItem_sche')
     sig_setup_bubble = Signal(dict, name='sig_setup_bubble')
 
 
@@ -76,10 +74,6 @@ class Scheduler_worker(QObject):
                            "note_cancel": self.tr("Your focus session has been canceled!")}
 
         self.scheduler = QtScheduler()
-        #self.scheduler.add_job(self.change_hp, 'interval', minutes=self.pet_conf.hp_interval)
-        self.scheduler.add_job(self.change_hp, interval.IntervalTrigger(minutes=1)) #self.pet_conf.hp_interval))
-        #self.scheduler.add_job(self.change_em, 'interval', minutes=self.pet_conf.em_interval)
-        self.scheduler.add_job(self.change_fv, interval.IntervalTrigger(minutes=1)) #self.pet_conf.fv_interval))
         self.scheduler.start()
 
 
@@ -155,18 +149,6 @@ class Scheduler_worker(QObject):
         #self.sig_settext_sche.emit('None')
         settings.showing_dialogue_now = False
 
-    '''
-    def item_drop(self, n_minutes):
-        nitems = n_minutes // 5
-        remains = max(0, n_minutes % 5 - 1)
-        chance_drop = random.choices([0,1], weights=(1-remains/5, remains/5))
-        nitems += chance_drop[0]
-        #for test -----
-        #nitems = 4
-        #---------------
-        if nitems > 0:
-            self.sig_addItem_sche.emit(nitems)
-    '''
 
     def add_tomato(self, n_tomato=None):
 
@@ -311,12 +293,6 @@ class Scheduler_worker(QObject):
         task_text = "tomato_cancel"
         time_torun_2 = datetime.now() + timedelta(seconds=1)
         self.scheduler.add_job(self.run_tomato, date.DateTrigger(run_date=time_torun_2), args=[task_text])
-
-    def change_hp(self):
-        self.sig_setstat_sche.emit('hp', -1)
-
-    def change_fv(self):
-        self.sig_setstat_sche.emit('fv', 1)
 
     def change_tomato(self):
         self.tomato_timeleft += -1

@@ -9,6 +9,8 @@ from .exceptions import (
     ProtocolError,
     AuthenticationError
 )
+from .gateway_manager import GatewayProcessManager, get_instance
+from .chat_history import ChatHistoryManager, ChatMessage
 
 __all__ = [
     'OpenClawWebSocketClient',
@@ -19,4 +21,8 @@ __all__ = [
     'HandshakeError',
     'ProtocolError',
     'AuthenticationError',
+    'GatewayProcessManager',
+    'get_instance',
+    'ChatHistoryManager',
+    'ChatMessage',
 ]

@@ -94,6 +94,8 @@ openclaw_enabled = False
 openclaw_url = "ws://127.0.0.1:18789"
 openclaw_token = ""
 openclaw_auto_reconnect = True
+openclaw_port_dict = {}
+openclaw_gateway_auto_start = True
 
 
 def init():
@@ -216,7 +218,8 @@ def init_settings():
     global gravity, fixdragspeedx, fixdragspeedy, tunable_scale, scale_dict, volume, \
            language_code, on_top_hint, default_pet, defaultAct, themeColor, minipet_scale, \
            toaster_on, usertag_dict, auto_lock, bubble_on, \
-           openclaw_enabled, openclaw_url, openclaw_token, openclaw_auto_reconnect
+           openclaw_enabled, openclaw_url, openclaw_token, openclaw_auto_reconnect, \
+           openclaw_port_dict, openclaw_gateway_auto_start
 
     # check json file integrity
     try:
@@ -306,6 +309,8 @@ def init_settings():
         openclaw_url = data_params.get('openclaw_url', "ws://127.0.0.1:18789")
         openclaw_token = data_params.get('openclaw_token', "")
         openclaw_auto_reconnect = data_params.get('openclaw_auto_reconnect', True)
+        openclaw_port_dict = data_params.get('openclaw_port_dict', {})
+        openclaw_gateway_auto_start = data_params.get('openclaw_gateway_auto_start', True)
         #=====================================================
 
     else:
@@ -332,6 +337,8 @@ def init_settings():
         openclaw_url = "ws://127.0.0.1:18789"
         openclaw_token = ""
         openclaw_auto_reconnect = True
+        openclaw_port_dict = {}
+        openclaw_gateway_auto_start = True
     check_locale()
     save_settings()
 
@@ -339,7 +346,8 @@ def save_settings():
     global file_path, set_fall, gravity, fixdragspeedx, fixdragspeedy, scale_dict, volume, \
            language_code, on_top_hint, default_pet, defaultAct, themeColor, minipet_scale, \
            toaster_on, usertag_dict, auto_lock, bubble_on, \
-           openclaw_enabled, openclaw_url, openclaw_token, openclaw_auto_reconnect
+           openclaw_enabled, openclaw_url, openclaw_token, openclaw_auto_reconnect, \
+           openclaw_port_dict, openclaw_gateway_auto_start
 
     data_js = {'gravity':gravity,
                'set_fall': set_fall,
@@ -360,7 +368,9 @@ def save_settings():
                'openclaw_enabled':openclaw_enabled,
                'openclaw_url':openclaw_url,
                'openclaw_token':openclaw_token,
-               'openclaw_auto_reconnect':openclaw_auto_reconnect
+               'openclaw_auto_reconnect':openclaw_auto_reconnect,
+               'openclaw_port_dict':openclaw_port_dict,
+               'openclaw_gateway_auto_start':openclaw_gateway_auto_start
                }
 
     with open(file_path, 'w', encoding='utf-8') as f:

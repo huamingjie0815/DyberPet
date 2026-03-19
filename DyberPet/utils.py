@@ -25,16 +25,6 @@ def log(*args, **kwargs):
     print(*args, **kwargs)
 
 
-def read_json(conf_file):
-    """
-    读取配置
-    :param conf_file:
-    :return: map
-    """
-    with open(conf_file, 'r', encoding='UTF-8') as file:
-        return json.load(file)
-
-
 def rename_pet_action(pet_name: str, start_idx: int) -> None:
     """
     根据宠物名, 重命名宠物文件夹下的图片, 从0到n

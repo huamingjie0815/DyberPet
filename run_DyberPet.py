@@ -3,7 +3,6 @@ from sys import platform
 import ctypes
 from tendo import singleton
 import os
-from DyberPet.utils import read_json
 from DyberPet.pet_widget import PetWidget
 from DyberPet.notification import DPNote
 from DyberPet.accessory import DPAccessory
@@ -13,7 +12,7 @@ from PySide6 import QtCore
 from PySide6.QtCore import Qt, QLocale, QTimer, QDateTime, QDate, Signal, QTime
 
 from qfluentwidgets import  FluentTranslator, setThemeColor
-from DyberPet.DyberSettings.control_panel import ControlMainWindow
+from DyberPet.DyberSettings.control_panel import MainPanel
 
 try:
     size_factor = 1 #ctypes.windll.shcore.GetScaleFactorForDevice(0) / 100
@@ -67,8 +66,8 @@ class DyberPetApp(QApplication):
         # Accessory System
         self.acc = DPAccessory()
 
-        # System Panel (combined with Dashboard)
-        self.conp = ControlMainWindow()
+        # System Panel
+        self.panel = MainPanel()
 
         # Midnight Timer
         self.current_date = QDate.currentDate()
@@ -82,42 +81,23 @@ class DyberPetApp(QApplication):
         self.p.setup_notification.connect(self.note.setup_notification)
         self.p.setup_bubbleText.connect(self.note.setup_bubbleText)
         self.p.change_note.connect(self.note.change_pet)
-        self.p.change_note.connect(self.conp.charCardInterface._finishStateTooltip)
         self.p.close_bubble.connect(self.note.close_bubble)
-        self.p.hptier_changed_main_note.connect(self.note.hpchange_note)
-        self.p.fvlvl_changed_main_note.connect(self.note.fvchange_note)
         self.p.setup_acc.connect(self.acc.setup_accessory)
         self.p.move_sig.connect(self.acc.send_main_movement)
         self.p.move_sig.connect(self.note.send_main_movement)
         self.p.close_all_accs.connect(self.acc.closeAll)
 
-        # System Widgets - others
-        self.conp.settingInterface.ontop_changed.connect(self.acc.ontop_changed)
-        self.conp.settingInterface.scale_changed.connect(self.acc.reset_size_sig)
+        # MainPanel - settings
+        self.panel.settingInterface.ontop_changed.connect(self.acc.ontop_changed)
+        self.panel.settingInterface.scale_changed.connect(self.acc.reset_size_sig)
+        self.panel.settingInterface.ontop_changed.connect(self.p.ontop_update)
+        self.panel.settingInterface.scale_changed.connect(self.p.reset_size)
+        self.panel.settingInterface.lang_changed.connect(self.p.lang_changed)
+        self.p.change_note.connect(self.panel.settingInterface._update_scale)
 
-        self.conp.settingInterface.ontop_changed.connect(self.p.ontop_update)
-        self.conp.settingInterface.scale_changed.connect(self.p.reset_size)
-        self.conp.settingInterface.lang_changed.connect(self.p.lang_changed)
-        self.p.change_note.connect(self.conp.settingInterface._update_scale)
-
-        self.conp.charCardInterface.change_pet.connect(self.p._change_pet)
-        self.p.show_controlPanel.connect(self.conp.show_window)
-        self.p.show_chat.connect(self.conp.show_chat)
-
-        self.conp.gamesaveInterface.refresh_pet.connect(self.p.refresh_pet)
-
-        # Dashboard - now part of control panel
-        self.p.show_dashboard.connect(self.conp.show_window)
-        self.note.noteToLog.connect(self.conp.statusInterface._addNote)
-
-        # Tasks and Timer
-        self.conp.taskInterface.focusPanel.start_pomodoro.connect(self.p.run_tomato)
-        self.conp.taskInterface.focusPanel.cancel_pomodoro.connect(self.p.cancel_tomato)
-        self.conp.taskInterface.focusPanel.start_focus.connect(self.p.run_focus)
-        self.conp.taskInterface.focusPanel.cancel_focus.connect(self.p.cancel_focus)
-        self.p.taskUI_Timer_update.connect(self.conp.taskInterface.focusPanel.update_Timer)
-        self.p.taskUI_task_end.connect(self.conp.taskInterface.focusPanel.taskFinished)
-        self.p.single_pomo_done.connect(self.conp.taskInterface.focusPanel.single_pomo_done)
+        # Chat panel navigation
+        self.p.show_chat.connect(self.panel.show_chat)
+        self.p.change_note.connect(self.panel.chatInterface.on_pet_changed)
 
         # Midnight Trigger
         self.date_changed.connect(self.p._mightEventTrigger)

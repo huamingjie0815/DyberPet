@@ -15,11 +15,46 @@
 
 ---
 
-## Fork Origin
+## Copyright & License
+
+This project is open source under **GNU General Public License v3 (GPL-3.0)**.
+
+- **Original Version**: Copyright (C) 2022 Chaozhong Liu \<czliubioinfo@gmail.com\>
+- **Fork Version**: Copyright (C) 2026 huamingjie0815
+
+This project is a fork of [ChaozhongLiu/DyberPet](https://github.com/ChaozhongLiu/DyberPet), developed on the `feat/lite-version` branch.
+
+### GPL-3.0 License Terms
+
+Under GPL-3.0, you have the right to:
+
+- Freely use, modify, and distribute this software
+- Commercial use
+- Permanent use
+
+You must:
+
+- **Open Source Distribution**: If you distribute this software or derivative works, you must release under GPL-3.0
+- **Retain Copyright Notices**: You must preserve original copyright notices and license files
+- **Mark Modifications**: If you modify this project, you must clearly indicate
+- **Provide Source Code**: If distributing binaries, you must provide source code
+
+### Derivative Works
+
+If you modify and redistribute this project:
+
+1. Modified versions must be clearly marked as "modified version"
+2. All original copyright notices must be retained
+3. Derivative works must also be released under GPL-3.0
+4. You may add your own copyright notice to the project
+
+See [LICENSE](LICENSE) file for full terms.
+
+---
+
+## Project Origin
 
 This project is forked from [ChaozhongLiu/DyberPet](https://github.com/ChaozhongLiu/DyberPet), developed on the `feat/lite-version` branch.
-
-## Lite Version
 
 This is a **lite version** with simplified features, keeping only the core experience:
 
@@ -34,15 +69,16 @@ Kept core features:
 - Multi-pet switching
 - OpenClaw deep integration
 
+---
+
 ## OpenClaw Deep Integration
 
-This project provides **deep integration with OpenClaw** for real-time pet LLM conversations:
+This project integrates deeply with OpenClaw for real-time pet LLM conversations:
 
 - **WebSocket Real-time Communication**: Pet connects to OpenClaw Gateway via WebSocket
 - **Streaming Responses**: AI replies stream in real-time, displayed in chat bubbles
 - **Multi-character Port Management**: Each pet character maps to an independent port
 - **Chat Panel**: Built-in Chat UI for natural language interaction
-- **Context Memory**: Multi-turn conversations via OpenClaw history management
 
 ### OpenClaw Architecture
 
@@ -51,22 +87,23 @@ This project provides **deep integration with OpenClaw** for real-time pet LLM c
 │                        ClawPet                              │
 │  ┌─────────────┐    ┌──────────────┐    ┌─────────────┐  │
 │  │  PetWidget  │◄──►│ Chat Panel   │◄──►│ OpenClaw    │  │
-│  │  (Desktop)  │    │              │    │  Client     │  │
+│  │             │    │              │    │  Client     │  │
 │  └─────────────┘    └──────────────┘    └──────┬──────┘  │
 │         │                                       │          │
 └─────────┼───────────────────────────────────────┼──────────┘
           │                                       ▼
           │              ┌──────────────────────────────┐
-          │              │     OpenClaw Gateway         │
-          │              │   (WebSocket Server)        │
+          │              │     OpenClaw Gateway          │
           │              └──────────────┬───────────────┘
           │                             │
           ▼                             ▼
    ┌─────────────┐              ┌──────────────────┐
    │  Chat Bubble│              │   LLM Provider   │
-   │  (AI Reply)│              │   (GPT/Claude)  │
+   │  (AI Reply) │              │   (GPT/Claude)  │
    └─────────────┘              └──────────────────┘
 ```
+
+---
 
 ## Quick Start
 
@@ -94,12 +131,7 @@ pip install websocket-client
 python run_ClawPet.py
 ```
 
-### Configure OpenClaw
-
-1. Enable OpenClaw in Settings
-2. Configure OpenClaw Gateway address and port
-3. Set authentication Token
-4. Restart app to start chatting with your pet
+---
 
 ## Project Structure
 
@@ -107,54 +139,16 @@ python run_ClawPet.py
 ClawPet/
 ├── ClawPet/              # Core package
 │   ├── core/             # Core modules
-│   │   ├── pet_animation.py    # Animation module
-│   │   ├── pet_interaction.py  # Interaction module
-│   │   ├── pet_scheduler.py    # Scheduler
-│   │   ├── accessory.py       # Accessory system
-│   │   └── notification.py    # Notification system
 │   ├── ClawSettings/     # Settings panel
-│   │   ├── control_panel.py    # Main control panel
-│   │   ├── chat_ui.py         # Chat interface
-│   │   └── appearance_ui.py    # Appearance settings
 │   ├── OpenClawClient/   # OpenClaw integration
-│   │   ├── websocket_client.py  # WebSocket client
-│   │   ├── gateway_manager.py   # Gateway port management
-│   │   └── chat_history.py     # Chat history
 │   ├── Dashboard/        # Dashboard
-│   ├── pet_widget.py     # Main pet window
-│   ├── config.py         # Configuration
-│   └── settings.py       # Settings
+│   └── ...
 ├── res/                  # Resources
-│   └── role/            # Character assets
 ├── docs/                 # Documentation
 └── run_ClawPet.py        # Entry point
 ```
 
-## Differences from Original DyberPet
-
-| Feature | Original DyberPet | ClawPet (Lite) |
-|---------|-----------------|-----------------|
-| HP/Satiety | ✓ | ✗ |
-| Item System | ✓ | ✗ |
-| Buff System | ✓ | ✗ |
-| Mini-pet | ✓ | ✗ |
-| Shop | ✓ | ✗ |
-| Task System | ✓ | ✗ |
-| Desktop Pet Core | ✓ | ✓ |
-| Mouse Interaction | ✓ | ✓ |
-| OpenClaw Integration | ✗ | ✓ (Deep) |
-
-## Development
-
-### Asset Development
-
-See [Asset Development Guide](docs/art_dev.md)
-
-### Adding New Characters
-
-1. Create character folder under `res/role/`
-2. Configure `pet_conf.json` and `act_conf.json`
-3. Import via the app
+---
 
 ## Documentation
 
@@ -163,6 +157,15 @@ See [Asset Development Guide](docs/art_dev.md)
 - [Architecture Deep Dive](ARCHITECTURE_DEEP_DIVE.md)
 - [Design Document](DESIGN_DOCUMENT.md)
 
-## License
+---
 
-MIT License
+## Third-Party Dependencies
+
+This project uses the following open source libraries:
+
+- [PySide6](https://doc.qt.io/qtforpython/) - Qt bindings
+- [PySide6-Fluent-Widgets](https://github.com/zhiyiYo/PyQt-Fluent-Widgets) - Fluent UI
+- [APScheduler](https://apscheduler.readthedocs.io/) - Task scheduling
+- [WebSocket](https://websocket-client.readthedocs.io/) - WebSocket client
+
+See installation commands or environment setup for full dependencies.

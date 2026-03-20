@@ -7,6 +7,7 @@ from qfluentwidgets import FluentIcon as FIF
 
 from .basic_setting_ui import SettingInterface
 from .chat_ui import ChatInterface
+from .appearance_ui import AppearanceInterface
 import DyberPet.settings as settings
 basedir = settings.BASEDIR
 
@@ -18,6 +19,7 @@ class MainPanel(FluentWindow):
 
         self.chatInterface = ChatInterface(sizeHintDyber=(minWidth, minHeight), parent=self)
         self.settingInterface = SettingInterface(self)
+        self.appearanceInterface = AppearanceInterface(self)
 
         self.initNavigation()
         self.setMinimumSize(minWidth, minHeight)
@@ -25,8 +27,36 @@ class MainPanel(FluentWindow):
 
     def initNavigation(self):
         self.addSubInterface(self.chatInterface, FIF.CHAT, self.tr('Chat'))
+        self.addSubInterface(self.appearanceInterface, FIF.PEOPLE, self.tr('Appearance'))
         self.addSubInterface(self.settingInterface, FIF.SETTING, self.tr('Settings'))
         self.navigationInterface.setExpandWidth(200)
+
+        self.navigationInterface.setStyleSheet("""
+            QStackedWidget {
+                background-color: #FFFCF9;
+            }
+        """)
+
+    def initWindow(self):
+        self.setWindowIcon(QIcon(os.path.join(basedir, "res/icons/SystemPanel.png")))
+        self.setWindowTitle(self.tr('DyberPet'))
+        desktop = QApplication.primaryScreen().availableGeometry()
+        w, h = desktop.width(), desktop.height()
+        self.move(w // 2 - self.width() // 2, h // 2 - self.height() // 2)
+
+    def show_window(self):
+        if self.isVisible():
+            self.hide()
+        else:
+            self.show()
+
+    def show_chat(self):
+        self.show()
+        self.stackedWidget.setCurrentWidget(self.chatInterface)
+
+    def closeEvent(self, event):
+        event.ignore()
+        self.hide()
 
         self.navigationInterface.setStyleSheet("""
             QStackedWidget {

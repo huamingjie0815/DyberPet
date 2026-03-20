@@ -99,6 +99,10 @@ class DyberPetApp(QApplication):
         self.p.show_chat.connect(self.panel.show_chat)
         self.p.change_note.connect(self.panel.chatInterface.on_pet_changed)
 
+        # Appearance panel
+        self.panel.appearanceInterface.appearance_changed.connect(self.p._change_pet)
+        self.p.change_note.connect(self.panel.appearanceInterface.on_pet_changed)
+
         # Midnight Trigger
         self.date_changed.connect(self.p._mightEventTrigger)
     

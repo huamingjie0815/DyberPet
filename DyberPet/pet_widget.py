@@ -449,11 +449,6 @@ class PetWidget(QWidget):
 
         self.workers['Scheduler'].send_greeting()
 
-        # Switch gateway to new character
-        from DyberPet.OpenClawClient.gateway_manager import get_instance as get_gateway
-        port = settings.openclaw_port_dict.get(pet_name, 18789)
-        get_gateway().switch_gateway(pet_name, port, settings.openclaw_token)
-
         # Due to Qt internal behavior, sometimes has to manually correct the position back
         pos_x, pos_y = self.pos().x(), self.pos().y()
         QTimer.singleShot(10, lambda: self.move(pos_x, pos_y))
@@ -793,7 +788,10 @@ class PetWidget(QWidget):
         self.show_chat.emit()
 
     def _open_openclaw_webui(self):
-        port = settings.openclaw_port_dict.get(self.curr_pet_name, 18789)
+        try:
+            port = int(settings.openclaw_url.split(':')[-1])
+        except (ValueError, IndexError):
+            port = 18789
         QDesktopServices.openUrl(QUrl(f"http://127.0.0.1:{port}"))
 
     def show_tomato(self):

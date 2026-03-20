@@ -2422,4 +2422,35 @@ For most of time, App can import the pet for you automatically. But in any case 
         <translation>USERTAG 你现在应该专注在任务上</translation>
     </message>
 </context>
+<context>
+    <name>ChatInterface</name>
+    <message>
+        <source>Chat with Pet</source>
+        <translation>与宠物对话</translation>
+    </message>
+    <message>
+        <source>Send a message...</source>
+        <translation>发送消息...</translation>
+    </message>
+    <message>
+        <source>Open OpenClaw WebUI</source>
+        <translation>打开 OpenClaw 网页端</translation>
+    </message>
+    <message>
+        <source>Gateway running</source>
+        <translation>网关运行中</translation>
+    </message>
+    <message>
+        <source>Gateway stopped</source>
+        <translation>网关已停止</translation>
+    </message>
+    <message>
+        <source>Connection error:</source>
+        <translation>连接错误：</translation>
+    </message>
+    <message>
+        <source>Chat is not connected. Please configure OpenClaw settings.</source>
+        <translation>聊天未连接，请配置 OpenClaw 设置。</translation>
+    </message>
+</context>
 </TS>

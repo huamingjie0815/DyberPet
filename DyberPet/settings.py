@@ -392,6 +392,22 @@ def get_petlist(dirname):
     #    pets.remove(subpet)
     return pets
 
+
+def reload_petlist():
+    """Reload the pet list from disk after importing a new appearance."""
+    global pets, default_pet, defaultAct, scale_dict
+    role_dir = os.path.join(basedir, 'res/role')
+    pets = get_petlist(role_dir)
+    if default_pet not in pets:
+        default_pet = pets[0]
+    pets = [default_pet] + [p for p in sorted(pets) if p != default_pet]
+    for pet in pets:
+        defaultAct.setdefault(pet, None)
+        if pet not in scale_dict:
+            scale_dict[pet] = 1.0
+    save_settings()
+
+
 def change_translator(language_code):
     global translator
     if language_code == 'en_US':
@@ -415,7 +431,7 @@ def check_locale():
         if language_code.split("_")[0] == 'zh':
             language_code = "zh_CN"
         else:
-            language_code = "en_US"
+            language_code = "zh_CN"
             
 
 def check_dict_datatype(raw_dict:dict, dtype, default_value):

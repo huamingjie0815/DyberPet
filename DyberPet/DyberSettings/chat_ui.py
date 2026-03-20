@@ -213,7 +213,7 @@ class GatewayBar(QWidget):
         self.openBtn = QPushButton(self)
         self.openBtn.setIcon(FIF.GLOBE.icon())
         self.openBtn.setFixedSize(34, 34)
-        self.openBtn.setToolTip("Open OpenClaw WebUI")
+        self.openBtn.setToolTip(self.tr("Open OpenClaw WebUI"))
         self.openBtn.setStyleSheet("""
             QPushButton {
                 background: rgba(120, 160, 220, 0.15);
@@ -267,10 +267,10 @@ class GatewayBar(QWidget):
     def _set_status(self, running: bool):
         if running:
             self.statusDot.setStyleSheet("color: #2ECC71; font-size:14px;")
-            self.statusDot.setToolTip("Gateway running")
+            self.statusDot.setToolTip(self.tr("Gateway running"))
         else:
             self.statusDot.setStyleSheet("color: #CCCCCC; font-size:14px;")
-            self.statusDot.setToolTip("Gateway stopped")
+            self.statusDot.setToolTip(self.tr("Gateway stopped"))
 
     def set_gateway_running(self, running: bool):
         self._set_status(running)
@@ -346,7 +346,6 @@ class ChatInputPanel(QWidget):
         hbox.setSpacing(12)
 
         self.inputEdit = QLineEdit(self)
-        self.inputEdit.setPlaceholderText("Send a message...")
         self.inputEdit.setObjectName("chatInput")
         self.inputEdit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         self.inputEdit.setFixedHeight(44)
@@ -391,6 +390,10 @@ class ChatInputPanel(QWidget):
 
         self.sendButton.clicked.connect(self._on_send)
         self.inputEdit.returnPressed.connect(self._on_send)
+
+    def showEvent(self, event):
+        super().showEvent(event)
+        self.inputEdit.setPlaceholderText(self.tr("Send a message..."))
 
     def _on_send(self):
         text = self.inputEdit.text().strip()
@@ -518,7 +521,7 @@ class ChatCardGroup(QWidget):
             self._streaming_widget.update_content(self._pending_stream_content)
 
     def _on_openclaw_error(self, error: str):
-        self.messageList.add_message("pet", f"Connection error: {error}")
+        self.messageList.add_message("pet", self.tr("Connection error:") + f" {error}")
 
     def _on_message_submitted(self, text: str):
         self.messageList.add_message("user", text)
@@ -526,7 +529,7 @@ class ChatCardGroup(QWidget):
         if self._openclaw and self._openclaw.is_connected():
             self._openclaw.send_message(text)
         else:
-            self.messageList.add_message("pet", "Chat is not connected. Please configure OpenClaw settings.")
+            self.messageList.add_message("pet", self.tr("Chat is not connected. Please configure OpenClaw settings."))
 
     def _save_message(self, sender: str, content: str):
         from DyberPet.OpenClawClient.chat_history import ChatHistoryManager, ChatMessage as HistMsg

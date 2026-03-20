@@ -11,15 +11,15 @@ from PySide6.QtGui import QImage, QPixmap, QIcon, QCursor, QPainter, QFont, QCol
 
 from qfluentwidgets import Action
 from qfluentwidgets import FluentIcon as FIF
-from DyberPet.custom_roundmenu import RoundMenu
-from DyberPet.custom_widgets import SystemTray
-from DyberPet.bubble_manager import BubbleManager
-from DyberPet.accessory import MouseMoveManager
-from DyberPet.workers import Animation_worker, Interaction_worker, Scheduler_worker
-from DyberPet.config import PetConfig, ItemData
+from ClawPet.custom_roundmenu import RoundMenu
+from ClawPet.custom_widgets import SystemTray
+from ClawPet.bubble_manager import BubbleManager
+from ClawPet.accessory import MouseMoveManager
+from ClawPet.workers import Animation_worker, Interaction_worker, Scheduler_worker
+from ClawPet.config import PetConfig, ItemData
 
 # initialize settings
-import DyberPet.settings as settings
+import ClawPet.settings as settings
 settings.init()
 
 basedir = settings.BASEDIR
@@ -27,9 +27,9 @@ configdir = settings.CONFIGDIR
 
 
 # version
-dyberpet_version = settings.VERSION
+clawpet_version = settings.VERSION
 vf = open(os.path.join(configdir,'data/version'), 'w')
-vf.write(dyberpet_version)
+vf.write(clawpet_version)
 vf.close()
 
 # some UI size parameters
@@ -737,7 +737,7 @@ class PetWidget(QWidget):
         self.stop_thread('Interaction')
         self.stop_thread("Scheduler")
         self.stopAllThread.emit()
-        from DyberPet.OpenClawClient.gateway_manager import get_instance as get_gateway
+        from ClawPet.OpenClawClient.gateway_manager import get_instance as get_gateway
         get_gateway().stop_gateway()
         self.close()
         sys.exit()

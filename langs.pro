@@ -1,26 +1,21 @@
-SOURCES += DyberPet/DyberSettings/DyberControlPanel.py \
-        DyberPet/DyberSettings/BasicSettingUI.py \
-        DyberPet/DyberSettings/CharCardUI.py \
-        DyberPet/DyberSettings/GameSaveUI.py \
-        DyberPet/DyberSettings/ItemCardUI.py \
-        DyberPet/DyberSettings/custom_base.py \
-        DyberPet/DyberSettings/custom_utils.py \
-        DyberPet/Accessory.py \
-        DyberPet/DyberPet.py \
-        DyberPet/modules.py \
-        DyberPet/extra_windows.py \
-        DyberPet/Notification.py \
-        DyberPet/Dashboard/DashboardUI.py \
-        DyberPet/Dashboard/animationUI.py \
-        DyberPet/Dashboard/buffModule.py \
-        DyberPet/Dashboard/dashboard_widgets.py \
-        DyberPet/Dashboard/inventoryUI.py \
-        DyberPet/Dashboard/shopUI.py \
-        DyberPet/Dashboard/statusUI.py \
-        DyberPet/Dashboard/taskUI.py \
-        DyberPet/Dashboard/animDesignUI.py \
-
-
-
-
-TRANSLATIONS += res/language/langs.zh_CN.blank.ts
+SOURCES += ClawPet/ClawSettings/DyberControlPanel.py \
+        ClawPet/ClawSettings/BasicSettingUI.py \
+        ClawPet/ClawSettings/CharCardUI.py \
+        ClawPet/ClawSettings/GameSaveUI.py \
+        ClawPet/ClawSettings/ItemCardUI.py \
+        ClawPet/ClawSettings/custom_base.py \
+        ClawPet/ClawSettings/custom_utils.py \
+        ClawPet/Accessory.py \
+        ClawPet/__init__.py \
+        ClawPet/modules.py \
+        ClawPet/extra_windows.py \
+        ClawPet/Notification.py \
+        ClawPet/Dashboard/DashboardUI.py \
+        ClawPet/Dashboard/animationUI.py \
+        ClawPet/Dashboard/buffModule.py \
+        ClawPet/Dashboard/dashboard_widgets.py \
+        ClawPet/Dashboard/inventoryUI.py \
+        ClawPet/Dashboard/shopUI.py \
+        ClawPet/Dashboard/statusUI.py \
+        ClawPet/Dashboard/taskUI.py \
+        ClawPet/Dashboard/animDesignUI.py \

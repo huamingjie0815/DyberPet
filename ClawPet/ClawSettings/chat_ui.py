@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (QWidget, QLabel, QVBoxLayout, QHBoxLayout,
 from qfluentwidgets import FluentIcon as FIF, ExpandLayout
 from qfluentwidgets import CaptionLabel, CardWidget
 
-import DyberPet.settings as settings
+import ClawPet.settings as settings
 basedir = settings.BASEDIR
 
 CHAT_MESSAGE_MAX_WIDTH = 360
@@ -453,7 +453,7 @@ class ChatCardGroup(QWidget):
         self.gatewayBar.populate_characters(pets, settings.petname)
         self.gatewayBar.switch_character.connect(self._on_gateway_char_changed)
 
-        from DyberPet.OpenClawClient.gateway_manager import get_instance as get_gateway
+        from ClawPet.OpenClawClient.gateway_manager import get_instance as get_gateway
         gm = get_gateway()
         gm.gateway_started.connect(lambda name, port: self.gatewayBar.set_gateway_running(True))
         gm.gateway_stopped.connect(lambda name: self.gatewayBar.set_gateway_running(False))
@@ -464,12 +464,12 @@ class ChatCardGroup(QWidget):
             QTimer.singleShot(500, lambda: gm.switch_gateway(settings.petname, port, settings.openclaw_token))
 
     def _on_gateway_char_changed(self, name: str):
-        from DyberPet.OpenClawClient.gateway_manager import get_instance as get_gateway
+        from ClawPet.OpenClawClient.gateway_manager import get_instance as get_gateway
         port = settings.openclaw_port_dict.get(name, 18789)
         get_gateway().switch_gateway(name, port, settings.openclaw_token)
 
     def _load_history(self, prepend: bool = False):
-        from DyberPet.OpenClawClient.chat_history import ChatHistoryManager
+        from ClawPet.OpenClawClient.chat_history import ChatHistoryManager
         mgr = ChatHistoryManager()
         msgs = mgr.load_history(settings.petname, limit=self._history_page_size, offset=self._history_offset)
         self._history_offset += len(msgs)
@@ -486,7 +486,7 @@ class ChatCardGroup(QWidget):
 
     def _init_openclaw_client(self):
         if settings.openclaw_enabled and settings.openclaw_token:
-            from DyberPet.OpenClawClient import OpenClawWebSocketClient
+            from ClawPet.OpenClawClient import OpenClawWebSocketClient
             self._openclaw = OpenClawWebSocketClient(settings.openclaw_url, settings.openclaw_token)
             QTimer.singleShot(100, self._connect_openclaw_signals)
         else:
@@ -532,7 +532,7 @@ class ChatCardGroup(QWidget):
             self.messageList.add_message("pet", self.tr("Chat is not connected. Please configure OpenClaw settings."))
 
     def _save_message(self, sender: str, content: str):
-        from DyberPet.OpenClawClient.chat_history import ChatHistoryManager, ChatMessage as HistMsg
+        from ClawPet.OpenClawClient.chat_history import ChatHistoryManager, ChatMessage as HistMsg
         import uuid
         mgr = ChatHistoryManager()
         msg = HistMsg(sender=sender, content=content,

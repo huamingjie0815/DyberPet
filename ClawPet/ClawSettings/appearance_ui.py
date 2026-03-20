@@ -13,7 +13,7 @@ from qfluentwidgets import (ScrollArea, ExpandLayout, PushButton, PrimaryPushBut
                             CardWidget, CaptionLabel, BodyLabel, SubtitleLabel,
                             InfoBar, InfoBarPosition, FluentIcon as FIF)
 
-import DyberPet.settings as settings
+import ClawPet.settings as settings
 
 basedir = settings.BASEDIR
 ROLE_DIR = os.path.join(basedir, 'res/role')

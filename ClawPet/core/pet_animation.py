@@ -10,10 +10,10 @@ from typing import List
 from PySide6.QtCore import QObject, Signal
 from PySide6.QtGui import QAction
 
-from DyberPet.utils import *
-from DyberPet.config import *
+from ClawPet.utils import *
+from ClawPet.config import *
 
-import DyberPet.settings as settings
+import ClawPet.settings as settings
 basedir = settings.BASEDIR
 
 

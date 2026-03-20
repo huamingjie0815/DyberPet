@@ -11,11 +11,11 @@ from PySide6.QtWidgets import *
 from qfluentwidgets import RoundMenu, Action
 from qfluentwidgets import FluentIcon as FIF
 
-from DyberPet.utils import *
-from DyberPet.config import *
+from ClawPet.utils import *
+from ClawPet.config import *
 
-from DyberPet.custom_widgets import DPDialogue
-import DyberPet.settings as settings
+from ClawPet.custom_widgets import CPDialogue
+import ClawPet.settings as settings
 '''
 try:
     size_factor = 1 #ctypes.windll.shcore.GetScaleFactorForDevice(0) / 100
@@ -39,7 +39,7 @@ basedir = settings.BASEDIR
 #          组件模块
 ##############################
 
-class DPAccessory(QWidget):
+class CPAccessory(QWidget):
     send_main_movement = Signal(int, int, name="send_main_movement")
     ontop_changed = Signal(name='ontop_changed')
     reset_size_sig = Signal(name='reset_size_sig')
@@ -50,7 +50,7 @@ class DPAccessory(QWidget):
         """
         宠物组件
         """
-        super(DPAccessory, self).__init__(parent) #, flags=Qt.WindowFlags())
+        super(CPAccessory, self).__init__(parent) #, flags=Qt.WindowFlags())
 
         self.setWindowFlags(flags | Qt.WindowStaysOnTopHint)
         self.acc_dict = {}

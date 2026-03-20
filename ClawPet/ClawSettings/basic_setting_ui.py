@@ -15,14 +15,14 @@ from PySide6.QtWidgets import QWidget, QLabel, QApplication
 #from qframelesswindow import FramelessWindow
 
 from .custom_utils import Dyber_RangeSettingCard, Dyber_ComboBoxSettingCard, CustomColorSettingCard
-import DyberPet.settings as settings
+import ClawPet.settings as settings
 
 basedir = settings.BASEDIR
-module_path = os.path.join(basedir, 'DyberPet/DyberSettings/')
+module_path = os.path.join(basedir, 'ClawPet/ClawSettings/')
 '''
 if platform == 'win32':
     basedir = ''
-    module_path = 'DyberPet/DyberSettings/'
+    module_path = 'ClawPet/ClawSettings/'
 else:
     #from pathlib import Path
     basedir = os.path.dirname(__file__) #Path(os.path.dirname(__file__))
@@ -30,7 +30,7 @@ else:
     basedir = basedir.replace('\\','/')
     basedir = '/'.join(basedir.split('/')[:-2])
 
-    module_path = os.path.join(basedir, 'DyberPet/DyberSettings/')
+    module_path = os.path.join(basedir, 'ClawPet/ClawSettings/')
 '''
 
 

@@ -11,8 +11,8 @@ from PySide6.QtCore import Qt, QPoint, Signal, QSize, QRectF
 from qfluentwidgets import (StrongBodyLabel, TransparentToolButton, BodyLabel, PushButton, 
                             isDarkTheme, Slider, CaptionLabel, setFont, ToolTipFilter)
 from qfluentwidgets import FluentIcon as FIF
-from DyberPet.utils import text_wrap
-import DyberPet.settings as settings
+from ClawPet.utils import text_wrap
+import ClawPet.settings as settings
 
 basedir = settings.BASEDIR
 
@@ -60,7 +60,7 @@ class HorizontalSeparator(QWidget):
 
 
 
-class DPDialogue(QWidget):
+class CPDialogue(QWidget):
     closed_acc = Signal(str, name='closed_acc')
 
     def __init__(self, acc_index,
@@ -68,7 +68,7 @@ class DPDialogue(QWidget):
                  pos_x=0,
                  pos_y=0,
                  parent=None):
-        super(DPDialogue, self).__init__(parent)
+        super(CPDialogue, self).__init__(parent)
 
         self.is_follow_mouse = False
         self.acc_index = acc_index

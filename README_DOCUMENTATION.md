@@ -1,4 +1,4 @@
-# DyberPet 文档导航与索引
+# ClawPet 文档导航与索引
 
 > 🎯 **快速开始**: 如果这是你第一次阅读，请先读这份文件的导航部分，然后选择相应的文档。
 
@@ -69,8 +69,8 @@
 ### 核心模块（必读）
 
 ```
-DyberPet/
-├── DyberPet.py          ⭐ PetWidget 主宠物窗口
+ClawPet/
+├── ClawPet.py          ⭐ PetWidget 主宠物窗口
 │                        📖 → DESIGN_DOCUMENT.md 3.2
 │
 ├── modules.py           ⭐ Animation_worker, Buff系统
@@ -305,7 +305,7 @@ res/
 1. 打开 DESIGN_DOCUMENT.md 3.2
 2. 查看"关键方法"表格
 3. 在 DEVELOPER_CHEATSHEET.md 2.1 中查询信号列表
-4. 对照源码 `DyberPet/DyberPet.py` 查看实现
+4. 对照源码 `ClawPet/ClawPet.py` 查看实现
 
 </details>
 
@@ -411,7 +411,7 @@ statusInterface.addBuff → 应用Buff
 
 | 功能 | 文件 | 类 |
 |------|------|-----|
-| 宠物显示 | DyberPet.py | PetWidget |
+| 宠物显示 | ClawPet.py | PetWidget |
 | 动画管理 | modules.py | Animation_worker |
 | Buff系统 | modules.py | BuffAdd, BuffAlt, BuffThread |
 | 气泡消息 | bubbleManager.py | BubbleManager |
@@ -514,5 +514,5 @@ ARCHITECTURE_DEEP_DIVE.md 4 (优化技巧)
 
 **最后更新**: 2026年3月17日  
 **文档版本**: v1.0  
-**适用项目版本**: DyberPet v0.7.7+
+**适用项目版本**: ClawPet v0.7.7+
 

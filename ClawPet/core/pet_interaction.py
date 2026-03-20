@@ -12,10 +12,10 @@ from PySide6.QtGui import QImage, QPixmap, QIcon, QCursor, QAction, QTransform
 from PySide6.QtWidgets import *
 from PySide6.QtCore import QObject, QThread, Signal
 
-from DyberPet.utils import *
-from DyberPet.config import *
+from ClawPet.utils import *
+from ClawPet.config import *
 
-import DyberPet.settings as settings
+import ClawPet.settings as settings
 basedir = settings.BASEDIR
 sys_hp_tiers = settings.HP_TIERS
 sys_nonDefault_prob = [1, 0.125, 0.25, 0.5]

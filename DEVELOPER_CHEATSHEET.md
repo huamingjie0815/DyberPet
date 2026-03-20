@@ -1,4 +1,4 @@
-# DyberPet 开发者速查表
+# ClawPet 开发者速查表
 
 ## 快速导航
 
@@ -13,8 +13,8 @@
 
 ### 目录结构速记
 ```
-DyberPet/              # 主模块
-├── DyberPet.py        ⭐ 主宠物窗口 (PetWidget)
+ClawPet/              # 主模块
+├── ClawPet.py        ⭐ 主宠物窗口 (PetWidget)
 ├── modules.py         ⭐ 核心逻辑 (Animation, Buff, Bubble)
 ├── conf.py            ⭐ 配置系统 (PetConfig, Act, Data)
 ├── settings.py        ⭐ 全局设置
@@ -193,7 +193,7 @@ BuffAdd(name="food_buff", {
 ### 3.1 settings 全局变量
 
 ```python
-import DyberPet.settings as settings
+import ClawPet.settings as settings
 
 # 当前宠物信息
 settings.petname              # str, 当前宠物名 ("Kitty")
@@ -367,7 +367,7 @@ pet_widget.hptier_changed.emit(2, "Normal")
 ### 5.3 创建和应用Buff
 
 ```python
-from DyberPet.modules import BuffAdd
+from ClawPet.modules import BuffAdd
 
 buff_config = {
     "effect": "hp",
@@ -434,7 +434,7 @@ animation_worker.fvchange(settings.pet_data.FV_lvl)
 ### 6.1 文本处理
 
 ```python
-from DyberPet.utils import text_wrap, MaskPhrase
+from ClawPet.utils import text_wrap, MaskPhrase
 
 # 自动换行处理
 wrapped = text_wrap(text, width=30)
@@ -446,7 +446,7 @@ masked = MaskPhrase(text)
 ### 6.2 时间转换
 
 ```python
-from DyberPet.utils import TimeConverter
+from ClawPet.utils import TimeConverter
 
 converter = TimeConverter()
 readable_time = converter.format(timestamp, format='%Y-%m-%d %H:%M')
@@ -455,7 +455,7 @@ readable_time = converter.format(timestamp, format='%Y-%m-%d %H:%M')
 ### 6.3 子宠物管理
 
 ```python
-from DyberPet.utils import SubPet_Manager
+from ClawPet.utils import SubPet_Manager
 
 manager = SubPet_Manager()
 manager.get_subpet(pet_name)
@@ -464,7 +464,7 @@ manager.get_subpet(pet_name)
 ### 6.4 JSON读写
 
 ```python
-from DyberPet.utils import read_json, write_json
+from ClawPet.utils import read_json, write_json
 
 # 读取
 data = read_json("path/to/config.json")
@@ -657,7 +657,7 @@ with open("debug.log", "a") as f:
 ### 片段1: 完整的Buff使用示例
 
 ```python
-from DyberPet.modules import BuffAdd, BuffThread
+from ClawPet.modules import BuffAdd, BuffThread
 
 # 创建Buff
 config = {

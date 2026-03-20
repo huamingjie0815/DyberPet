@@ -11,7 +11,7 @@ from .protocol import (
 )
 from .exceptions import ConnectionError, HandshakeError
 
-import DyberPet.settings as settings
+import ClawPet.settings as settings
 
 
 class OpenClawWebSocketClient(QObject):

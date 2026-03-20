@@ -3,23 +3,23 @@ from sys import platform
 import ctypes
 from tendo import singleton
 import os
-from DyberPet.pet_widget import PetWidget
-from DyberPet.notification import DPNote
-from DyberPet.accessory import DPAccessory
+from ClawPet.pet_widget import PetWidget
+from ClawPet.notification import CPNote
+from ClawPet.accessory import CPAccessory
 
 from PySide6.QtWidgets import QApplication
 from PySide6 import QtCore
 from PySide6.QtCore import Qt, QLocale, QTimer, QDateTime, QDate, Signal, QTime
 
 from qfluentwidgets import  FluentTranslator, setThemeColor
-from DyberPet.DyberSettings.control_panel import MainPanel
+from ClawPet.ClawSettings.control_panel import MainPanel
 
 try:
     size_factor = 1 #ctypes.windll.shcore.GetScaleFactorForDevice(0) / 100
 except:
     size_factor = 1
 
-import DyberPet.settings as settings
+import ClawPet.settings as settings
 
 
 # For translation:
@@ -28,17 +28,17 @@ import DyberPet.settings as settings
 
 # For .exe:
 # Now we use pyinstaller 6.5.0
-# pyinstaller --noconsole --icon="000.ico" --hidden-import="pynput.mouse._win32" --hidden-import="pynput.keyboard._win32" run_DyberPet.py
+# pyinstaller --noconsole --icon="000.ico" --hidden-import="pynput.mouse._win32" --hidden-import="pynput.keyboard._win32" run_ClawPet.py
 
 # For Mac:
-# pyinstaller --windowed --icon 000.icns --add-data="res:res" --add-data="DyberPet:DyberPet" --hidden-import="pynput.mouse._darwin" --hidden-import="pynput.keyboard._darwin" run_DyberPet.py
+# pyinstaller --windowed --icon 000.icns --add-data="res:res" --add-data="ClawPet:ClawPet" --hidden-import="pynput.mouse._darwin" --hidden-import="pynput.keyboard._darwin" run_ClawPet.py
 
 
-class DyberPetApp(QApplication):
+class ClawPetApp(QApplication):
     date_changed = Signal(QDate)
 
     def __init__(self, *args, **kwargs):
-        super(DyberPetApp, self).__init__(*args, **kwargs)
+        super(ClawPetApp, self).__init__(*args, **kwargs)
 
         self.setQuitOnLastWindowClosed(False)
         screens = self.screens()
@@ -61,10 +61,10 @@ class DyberPetApp(QApplication):
         self.p = PetWidget(screens=screens)
 
         # Notification System
-        self.note = DPNote()
+        self.note = CPNote()
 
         # Accessory System
-        self.acc = DPAccessory()
+        self.acc = CPAccessory()
 
         # System Panel
         self.panel = MainPanel()
@@ -145,7 +145,7 @@ if __name__ == '__main__':
     QApplication.setHighDpiScaleFactorRoundingPolicy(
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
 
-    app = DyberPetApp(sys.argv)
+    app = ClawPetApp(sys.argv)
     app.setAttribute(Qt.AA_DontCreateNativeWidgetSiblings)
 
     sys.exit(app.exec())

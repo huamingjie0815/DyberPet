@@ -1,4 +1,4 @@
-# DyberPet × OpenClaw 融合方案设计
+# ClawPet × OpenClaw 融合方案设计
 
 > v2.1 | 2026-03-19
 
@@ -29,29 +29,29 @@
 | R1 | **删除角色状态** | 移除 `statusInterface`（HP/FV/状态日志 等） |
 | R2 | **删除游戏存档** | 移除 `gamesaveInterface`（存档读档功能） |
 | R3 | **删除日常任务** | 移除 `taskInterface`（番茄钟、专注计时器等） |
-| R4 | **角色 = Gateway 实体** | 每个 DyberPet 角色对应一个 OpenClaw Gateway 端口，切换角色时自动停止旧 Gateway、启动新 Gateway |
+| R4 | **角色 = Gateway 实体** | 每个 ClawPet 角色对应一个 OpenClaw Gateway 端口，切换角色时自动停止旧 Gateway、启动新 Gateway |
 | R5 | **Chat UI 优化** | 支持 Markdown 渲染、图片展示、查询历史消息 |
 | R6 | **菜单简化** | 右键宠物菜单仅保留 **Chat**、**OpenClaw**、**Exit** 三项；删除 Dashboard、System、选择动作、召唤伙伴、更换角色 |
 | R7 | **OpenClaw 入口** | 菜单点击 OpenClaw 后打开浏览器访问 `http://127.0.0.1:<当前角色端口>` 的 OpenClaw WebUI |
-| R8 | **仅修改 Pet 代码** | 变更范围限于 DyberPet 项目本身，不修改 OpenClaw |
+| R8 | **仅修改 Pet 代码** | 变更范围限于 ClawPet 项目本身，不修改 OpenClaw |
 
 ### 1.2 当前集成状态
 
 | 组件 | 文件 | 状态 |
 |------|------|------|
-| WebSocket 客户端 | `DyberPet/OpenClawClient/websocket_client.py` | ✅ 已实现 |
-| Gateway Protocol v3 | `DyberPet/OpenClawClient/protocol.py` | ✅ 已实现 |
-| Ed25519 设备认证 | `DyberPet/OpenClawClient/device_identity.py` | ✅ 已实现 |
-| Chat UI | `DyberPet/DyberSettings/chat_ui.py` | ⚠️ 基础实现，不支持 Markdown/图片/历史 |
-| Settings 配置 | `DyberPet/settings.py` | ✅ `openclaw_enabled`/`url`/`token`/`auto_reconnect` |
+| WebSocket 客户端 | `ClawPet/OpenClawClient/websocket_client.py` | ✅ 已实现 |
+| Gateway Protocol v3 | `ClawPet/OpenClawClient/protocol.py` | ✅ 已实现 |
+| Ed25519 设备认证 | `ClawPet/OpenClawClient/device_identity.py` | ✅ 已实现 |
+| Chat UI | `ClawPet/DyberSettings/chat_ui.py` | ⚠️ 基础实现，不支持 Markdown/图片/历史 |
+| Settings 配置 | `ClawPet/settings.py` | ✅ `openclaw_enabled`/`url`/`token`/`auto_reconnect` |
 
 ### 1.3 需删除的功能模块
 
 | 功能 | 当前所在文件 | 涉及的 UI 入口 |
 |------|-------------|---------------|
-| 角色状态 (HP/FV/日志) | `DyberPet/Dashboard/status_ui.py` | ControlMainWindow Home 标签 |
-| 游戏存档 | `DyberPet/DyberSettings/game_save_ui.py` | ControlMainWindow Save & Load 标签 |
-| 日常任务/番茄钟 | `DyberPet/Dashboard/task_ui.py` | ControlMainWindow Focus 标签 |
+| 角色状态 (HP/FV/日志) | `ClawPet/Dashboard/status_ui.py` | ControlMainWindow Home 标签 |
+| 游戏存档 | `ClawPet/DyberSettings/game_save_ui.py` | ControlMainWindow Save & Load 标签 |
+| 日常任务/番茄钟 | `ClawPet/Dashboard/task_ui.py` | ControlMainWindow Focus 标签 |
 | 选择动作菜单 | `pet_widget.py` `_set_menu()` → `act_menu` | 右键菜单子菜单 |
 | 召唤伙伴菜单 | `pet_widget.py` `_set_menu()` → `companion_menu` | 右键菜单子菜单 |
 | 更换角色菜单 | `pet_widget.py` `_set_menu()` → `change_menu` | 右键菜单子菜单 |
@@ -66,7 +66,7 @@
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│                    DyberPet 桌面宠物                          │
+│                    ClawPet 桌面宠物                          │
 │                                                              │
 │  ┌────────────────┐      ┌─────────────────────────────────┐ │
 │  │   PetWidget    │      │  MainPanel (FluentWindow)       │ │
@@ -167,7 +167,7 @@ MainPanel(FluentWindow)
 └── settingInterface (Settings)    ← 保留原有设置功能
 ```
 
-#### 3.1.2 run_DyberPet.py 变更
+#### 3.1.2 run_ClawPet.py 变更
 
 删除以下信号连接：
 
@@ -287,10 +287,10 @@ stopAllThread = Signal()                # 停止线程
 
 ### 4.1 概述
 
-每个 DyberPet 角色对应一个独立的 OpenClaw Gateway 实例：
+每个 ClawPet 角色对应一个独立的 OpenClaw Gateway 实例：
 
 ```
-DyberPet Character          OpenClaw Gateway
+ClawPet Character          OpenClaw Gateway
 ──────────────────────────────────────────────────────────
 Kitty          ──────→      openclaw --profile Kitty gateway --port 18789
 ChrisKitty     ──────→      openclaw --profile ChrisKitty gateway --port 18790
@@ -330,7 +330,7 @@ def allocate_port(existing_ports: dict, character_name: str) -> int:
 
 ### 4.3 GatewayProcessManager
 
-新增 `DyberPet/OpenClawClient/gateway_manager.py`：
+新增 `ClawPet/OpenClawClient/gateway_manager.py`：
 
 ```python
 class GatewayProcessManager(QObject):
@@ -449,7 +449,7 @@ ChatInterface._on_character_selected("ChrisKitty")
 ### 4.5 应用启动时 Gateway 行为
 
 ```
-DyberPetApp.__init__()
+ClawPetApp.__init__()
     │
     ├── 创建 GatewayProcessManager 实例
     │
@@ -465,7 +465,7 @@ DyberPetApp.__init__()
 ### 4.6 应用退出时清理
 
 ```python
-# PetWidget.quit() 或 DyberPetApp 关闭时
+# PetWidget.quit() 或 ClawPetApp 关闭时
 gateway_manager.stop_gateway()
 ```
 
@@ -801,29 +801,29 @@ openclaw_auto_reconnect = True
 
 | # | 任务 | 涉及文件 | 验收标准 |
 |---|------|---------|---------|
-| 1.1 | 实现 `GatewayProcessManager` | `DyberPet/OpenClawClient/gateway_manager.py` (新建) | 可启动/停止 Gateway，信号正常 |
-| 1.2 | 新增 `openclaw_port_dict` 到 settings | `DyberPet/settings.py` | 端口映射持久化 |
-| 1.3 | 裁剪 PetWidget 信号和方法 | `DyberPet/pet_widget.py` | 删除 HP/FV/任务/Dashboard 相关代码 |
-| 1.4 | 重构右键菜单为 Chat + OpenClaw + Exit | `DyberPet/pet_widget.py` | 菜单仅显示 3 项，OpenClaw 打开浏览器 |
+| 1.1 | 实现 `GatewayProcessManager` | `ClawPet/OpenClawClient/gateway_manager.py` (新建) | 可启动/停止 Gateway，信号正常 |
+| 1.2 | 新增 `openclaw_port_dict` 到 settings | `ClawPet/settings.py` | 端口映射持久化 |
+| 1.3 | 裁剪 PetWidget 信号和方法 | `ClawPet/pet_widget.py` | 删除 HP/FV/任务/Dashboard 相关代码 |
+| 1.4 | 重构右键菜单为 Chat + OpenClaw + Exit | `ClawPet/pet_widget.py` | 菜单仅显示 3 项，OpenClaw 打开浏览器 |
 
 ### Phase 2：MainPanel 多导航面板 + Chat UI 重构
 
 | # | 任务 | 涉及文件 | 验收标准 |
 |---|------|---------|----------|
-| 2.1 | 重构 `ControlMainWindow` 为 `MainPanel` | `DyberPet/DyberSettings/control_panel.py` (重构) | FluentWindow 仅含 Chat + Settings 导航 |
-| 2.2 | 实现角色-Gateway 管理区（Chat 页面底部） | `DyberPet/DyberSettings/chat_ui.py` | 角色下拉、端口、状态灯、设置按钮 |
-| 2.3 | 实现 `MarkdownBubbleWidget` | `DyberPet/DyberSettings/chat_ui.py` | Markdown 正确渲染 |
-| 2.4 | 实现 `ChatHistoryManager` | `DyberPet/OpenClawClient/chat_history.py` (新建) | 历史消息读写正常 |
-| 2.5 | 重构 `ChatCardGroup` 使用 Markdown 气泡 | `DyberPet/DyberSettings/chat_ui.py` | 流式 Markdown、图片展示 |
-| 2.6 | 实现历史消息加载（打开时 + 上滑） | `DyberPet/DyberSettings/chat_ui.py` | 打开加载历史，上滑加载更多 |
+| 2.1 | 重构 `ControlMainWindow` 为 `MainPanel` | `ClawPet/DyberSettings/control_panel.py` (重构) | FluentWindow 仅含 Chat + Settings 导航 |
+| 2.2 | 实现角色-Gateway 管理区（Chat 页面底部） | `ClawPet/DyberSettings/chat_ui.py` | 角色下拉、端口、状态灯、设置按钮 |
+| 2.3 | 实现 `MarkdownBubbleWidget` | `ClawPet/DyberSettings/chat_ui.py` | Markdown 正确渲染 |
+| 2.4 | 实现 `ChatHistoryManager` | `ClawPet/OpenClawClient/chat_history.py` (新建) | 历史消息读写正常 |
+| 2.5 | 重构 `ChatCardGroup` 使用 Markdown 气泡 | `ClawPet/DyberSettings/chat_ui.py` | 流式 Markdown、图片展示 |
+| 2.6 | 实现历史消息加载（打开时 + 上滑） | `ClawPet/DyberSettings/chat_ui.py` | 打开加载历史，上滑加载更多 |
 
 ### Phase 3：集成与清理
 
 | # | 任务 | 涉及文件 | 验收标准 |
 |---|------|---------|---------|
-| 3.1 | 重构 `run_DyberPet.py` 信号连接 | `run_DyberPet.py` | 使用 MainPanel 替代 ControlMainWindow |
+| 3.1 | 重构 `run_ClawPet.py` 信号连接 | `run_ClawPet.py` | 使用 MainPanel 替代 ControlMainWindow |
 | 3.2 | 角色切换触发 Gateway 切换 + WS 重连 | `pet_widget.py` + `chat_ui.py` | 切换角色后 Chat 自动连接新端口 |
-| 3.3 | 应用启动时自动启动当前角色 Gateway | `run_DyberPet.py` | 启动后 Gateway 自动运行 |
+| 3.3 | 应用启动时自动启动当前角色 Gateway | `run_ClawPet.py` | 启动后 Gateway 自动运行 |
 | 3.4 | 应用退出时清理 Gateway 进程 | `pet_widget.py` | 退出时 Gateway 进程被终止 |
 | 3.5 | 删除不再使用的文件引用 | 各文件 | 无 import 错误，程序正常运行 |
 
@@ -857,29 +857,29 @@ openclaw_auto_reconnect = True
 
 | 文件 | 用途 |
 |------|------|
-| `DyberPet/OpenClawClient/gateway_manager.py` | Gateway 进程管理器 |
-| `DyberPet/OpenClawClient/chat_history.py` | 聊天历史持久化 |
+| `ClawPet/OpenClawClient/gateway_manager.py` | Gateway 进程管理器 |
+| `ClawPet/OpenClawClient/chat_history.py` | 聊天历史持久化 |
 
 ### 修改文件
 
 | 文件 | 变更 |
 |------|------|
-| `DyberPet/pet_widget.py` | 裁剪信号/方法，重构右键菜单为 Chat + OpenClaw + Exit |
-| `DyberPet/settings.py` | 新增 `openclaw_port_dict`，可选移除 HP/FV 常量 |
-| `DyberPet/DyberSettings/control_panel.py` | 重构为 `MainPanel(FluentWindow)`，仅含 Chat + Settings 导航 |
-| `DyberPet/DyberSettings/chat_ui.py` | Markdown 气泡、图片支持、流式优化、角色-Gateway 管理区 |
-| `run_DyberPet.py` | 用 MainPanel 替代 ControlMainWindow，新信号连接 |
-| `DyberPet/OpenClawClient/__init__.py` | 导出 GatewayProcessManager |
+| `ClawPet/pet_widget.py` | 裁剪信号/方法，重构右键菜单为 Chat + OpenClaw + Exit |
+| `ClawPet/settings.py` | 新增 `openclaw_port_dict`，可选移除 HP/FV 常量 |
+| `ClawPet/DyberSettings/control_panel.py` | 重构为 `MainPanel(FluentWindow)`，仅含 Chat + Settings 导航 |
+| `ClawPet/DyberSettings/chat_ui.py` | Markdown 气泡、图片支持、流式优化、角色-Gateway 管理区 |
+| `run_ClawPet.py` | 用 MainPanel 替代 ControlMainWindow，新信号连接 |
+| `ClawPet/OpenClawClient/__init__.py` | 导出 GatewayProcessManager |
 
 ### 不再使用的文件（可保留但不引入）
 
 | 文件 | 原功能 |
 |------|--------|
-| `DyberPet/DyberSettings/game_save_ui.py` | 游戏存档 |
-| `DyberPet/DyberSettings/char_card_ui.py` | 角色卡片管理（角色管理移入 Chat 页面） |
-| `DyberPet/Dashboard/status_ui.py` | 角色状态 |
-| `DyberPet/Dashboard/task_ui.py` | 日常任务 |
-| `DyberPet/Dashboard/dashboard_widgets.py` | Dashboard 组件 |
+| `ClawPet/DyberSettings/game_save_ui.py` | 游戏存档 |
+| `ClawPet/DyberSettings/char_card_ui.py` | 角色卡片管理（角色管理移入 Chat 页面） |
+| `ClawPet/Dashboard/status_ui.py` | 角色状态 |
+| `ClawPet/Dashboard/task_ui.py` | 日常任务 |
+| `ClawPet/Dashboard/dashboard_widgets.py` | Dashboard 组件 |
 
 ---
 

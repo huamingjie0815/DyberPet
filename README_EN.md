@@ -1,18 +1,18 @@
 <h1 align="center">
-  呆啵宠物  |  DyberPet
+  呆啵宠物  |  ClawPet
 </h1>
 
 <p align="center">
-  DyberPet is a PySide6-based Desktop Cyber Pet Framework, providing an App for all desktop pet creators
+  ClawPet is a PySide6-based Desktop Cyber Pet Framework, providing an App for all desktop pet creators
 </p>
 
 <p align="center">
   <a>
-    <img src="https://img.shields.io/github/license/ChaozhongLiu/DyberPet.svg">
+    <img src="https://img.shields.io/github/license/ChaozhongLiu/ClawPet.svg">
   </a>
 
   <a style="text-decoration:none">
-    <img src="https://img.shields.io/github/downloads/ChaozhongLiu/DyberPet/total.svg"/>
+    <img src="https://img.shields.io/github/downloads/ChaozhongLiu/ClawPet/total.svg"/>
   </a>
 
   <a style="text-decoration:none">
@@ -20,7 +20,7 @@
   </a>
 
   <a style="text-decoration:none">
-    <img src="https://img.shields.io/badge/DyberPet-v0.7.7-green.svg"/>
+    <img src="https://img.shields.io/badge/ClawPet-v0.7.7-green.svg"/>
   </a>
 </p>
 
@@ -30,9 +30,9 @@ English | <a href="README.md">简体中文</a>
 
 :octocat: The project is at the very early stage, and mostly maintained in Chinese. Please leave an issue here if you have any suggestion, question, or trouble using it.  
   
-:new: **03-01-2025: v0.7.7** App has been packaged and submit to [Release](https://github.com/ChaozhongLiu/DyberPet/releases/tag/v0.7.7). Any of your feedback is more than welcomed!  
+:new: **03-01-2025: v0.7.7** App has been packaged and submit to [Release](https://github.com/ChaozhongLiu/ClawPet/releases/tag/v0.7.7). Any of your feedback is more than welcomed!  
   
-:new: **04-06-2024: v0.3.7** has been adapted to PySide6-Fluent-Widgets v1.5.4, Please update PySide6-Fluent-Widgets with pip to run DyberPet.  
+:new: **04-06-2024: v0.3.7** has been adapted to PySide6-Fluent-Widgets v1.5.4, Please update PySide6-Fluent-Widgets with pip to run ClawPet.  
   
 🆕 **Language changer** is released now, supporting English and Simplified Chinese.    
   
@@ -41,7 +41,7 @@ English | <a href="README.md">简体中文</a>
 
 ## Try the Demo
 ### Windows Users
-  Download the latest Release，double-click **``run_DyberPet.exe``**, that's it!
+  Download the latest Release，double-click **``run_ClawPet.exe``**, that's it!
 
 ### Windows Terminal
   Create a new **conda** environment 
@@ -54,7 +54,7 @@ English | <a href="README.md">简体中文</a>
   pip install pyside6==6.5.2
   pip install tendo
   ```
-  Download the repository，then run **``run_DyberPet.py``**.
+  Download the repository，then run **``run_ClawPet.py``**.
   
 ### MacOS Users
   Create a new **conda** environment  
@@ -67,7 +67,7 @@ English | <a href="README.md">简体中文</a>
   pip install pyside6==6.5.2
   pip install tendo
   ```
-  Download the repository，then run **``run_DyberPet.py``**.
+  Download the repository，then run **``run_ClawPet.py``**.
 
 
 

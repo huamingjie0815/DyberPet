@@ -7,7 +7,7 @@ from apscheduler.triggers import interval, date, cron
 
 from PySide6.QtCore import QObject, Signal
 
-import DyberPet.settings as settings
+import ClawPet.settings as settings
 basedir = settings.BASEDIR
 
 

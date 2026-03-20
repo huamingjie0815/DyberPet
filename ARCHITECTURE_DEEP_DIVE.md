@@ -1,4 +1,4 @@
-# DyberPet 架构深度分析与技术文档
+# ClawPet 架构深度分析与技术文档
 
 ## Part 1: 详细架构图解
 
@@ -491,7 +491,7 @@ class BuffThread(QObject):
 ### 3.2 添加新的Dashboard面板
 
 ```python
-# DyberPet/Dashboard/customUI.py
+# ClawPet/Dashboard/customUI.py
 
 from qfluentwidgets import ScrollArea, ExpandLayout
 

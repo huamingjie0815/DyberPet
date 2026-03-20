@@ -1,5 +1,5 @@
-from DyberPet.core.accessory import (
-    DPAccessory,
+from ClawPet.core.accessory import (
+    CPAccessory,
     QHangLabel,
     QAccessory,
     MouseMoveManager,
@@ -8,7 +8,7 @@ from DyberPet.core.accessory import (
 )
 
 __all__ = [
-    'DPAccessory',
+    'CPAccessory',
     'QHangLabel',
     'QAccessory',
     'MouseMoveManager',

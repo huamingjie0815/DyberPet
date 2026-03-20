@@ -8,7 +8,7 @@ from qfluentwidgets import FluentIcon as FIF
 from .basic_setting_ui import SettingInterface
 from .chat_ui import ChatInterface
 from .appearance_ui import AppearanceInterface
-import DyberPet.settings as settings
+import ClawPet.settings as settings
 basedir = settings.BASEDIR
 
 
@@ -39,7 +39,7 @@ class MainPanel(FluentWindow):
 
     def initWindow(self):
         self.setWindowIcon(QIcon(os.path.join(basedir, "res/icons/SystemPanel.png")))
-        self.setWindowTitle(self.tr('DyberPet'))
+        self.setWindowTitle(self.tr('ClawPet'))
         desktop = QApplication.primaryScreen().availableGeometry()
         w, h = desktop.width(), desktop.height()
         self.move(w // 2 - self.width() // 2, h // 2 - self.height() // 2)
@@ -66,7 +66,7 @@ class MainPanel(FluentWindow):
 
     def initWindow(self):
         self.setWindowIcon(QIcon(os.path.join(basedir, "res/icons/SystemPanel.png")))
-        self.setWindowTitle(self.tr('DyberPet'))
+        self.setWindowTitle(self.tr('ClawPet'))
         desktop = QApplication.primaryScreen().availableGeometry()
         w, h = desktop.width(), desktop.height()
         self.move(w // 2 - self.width() // 2, h // 2 - self.height() // 2)

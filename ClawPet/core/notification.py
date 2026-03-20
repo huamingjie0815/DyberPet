@@ -22,10 +22,10 @@ from PySide6.QtMultimedia import QSoundEffect, QMediaPlayer, QAudioOutput
 from qfluentwidgets import TextWrap, TransparentToolButton, BodyLabel
 from qfluentwidgets import FluentIcon as FIF
 
-from DyberPet.utils import *
-from DyberPet.config import *
+from ClawPet.utils import *
+from ClawPet.config import *
 
-import DyberPet.settings as settings
+import ClawPet.settings as settings
 
 basedir = settings.BASEDIR
 
@@ -36,7 +36,7 @@ basedir = settings.BASEDIR
 通知类型：
 1. 系统通知
     字段：system
-    图标：DyberPet icon
+    图标：ClawPet icon
 
 2. 数值相关通知
     字段：status_{hp, fv, coin}
@@ -60,7 +60,7 @@ basedir = settings.BASEDIR
 '''
 
 
-class DPNote(QWidget):
+class CPNote(QWidget):
 
     noteToLog = Signal(QPixmap, str, name="noteToLog")
     send_main_movement = Signal(int, int, name="send_main_movement")
@@ -69,7 +69,7 @@ class DPNote(QWidget):
         """
         通知组件
         """
-        super(DPNote, self).__init__(parent)
+        super(CPNote, self).__init__(parent)
 
         sys_note_conf = dict(json.load(open(os.path.join(basedir, 'res/icons/note_icon.json'), 'r', encoding='UTF-8')))
         try:
@@ -229,7 +229,7 @@ class DPNote(QWidget):
 
             else:
                 #height_margin = sum(self.height_dict.values()) + 10*(len(self.height_dict.keys()))
-                self.note_dict[note_index] = DyberToaster(note_index,
+                self.note_dict[note_index] = ClawToaster(note_index,
                                                         message=message,
                                                         icon=icon,
                                                         corner=Qt.BottomRightCorner,
@@ -440,7 +440,7 @@ def extract_change_info(message):
 
 
 
-class DyberToaster(QFrame):
+class ClawToaster(QFrame):
     closed_note = Signal(str, str, name='closed_note')
 
     def __init__(self, note_index,

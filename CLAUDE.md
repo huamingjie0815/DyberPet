@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-DyberPet (呆啵宠物) is a PySide6-based desktop pet development framework. The current branch (`feat/lite-version`) implements a simplified version that removes HP/FV, items, buff, and subpet systems, keeping only core pet display, animation, and mouse interaction.
+ClawPet (爪宠物) is a PySide6-based desktop pet development framework. The current branch (`feat/lite-version`) implements a simplified version that removes HP/FV, items, buff, and subpet systems, keeping only core pet display, animation, and mouse interaction.
 
 ## Environment Setup
 
@@ -25,18 +25,18 @@ pip install websocket-client
 
 ```bash
 conda activate Dyber_pyside
-python run_DyberPet.py
+python run_ClawPet.py
 ```
 
 ## Architecture
 
 ```
-run_DyberPet.py          # Application entry point
-├── DyberPet.DyberPet   # Main PetWidget (desktop pet window)
-├── DyberPet.Notification # Bubble/notification system
-├── DyberPet.Accessory  # Accessories overlay system
-├── DyberPet.DyberSettings.DyberControlPanel # Settings panel
-└── DyberPet.Dashboard.DashboardUI # Dashboard with tasks, animations
+run_ClawPet.py          # Application entry point
+├── ClawPet.ClawPet   # Main PetWidget (desktop pet window)
+├── ClawPet.Notification # Bubble/notification system
+├── ClawPet.Accessory  # Accessories overlay system
+├── ClawPet.ClawSettings.ClawControlPanel # Settings panel
+└── ClawPet.Dashboard.DashboardUI # Dashboard with tasks, animations
 ```
 
 ### Core Components

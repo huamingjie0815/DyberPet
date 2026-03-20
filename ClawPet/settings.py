@@ -5,7 +5,7 @@ from sys import platform
 from collections import defaultdict
 
 from PySide6.QtGui import QImage, QPixmap
-from DyberPet.config import PetData, TaskData, ActData
+from ClawPet.config import PetData, TaskData, ActData
 from PySide6 import QtCore
 
 if platform == 'win32':
@@ -20,7 +20,7 @@ else:
     BASEDIR = basedir
 
 if platform == 'linux':
-    configdir = os.path.dirname(os.environ['HOME']+'/.config/DyberPet/DyberPet')
+    configdir = os.path.dirname(os.environ['HOME']+'/.config/ClawPet/ClawPet')
     CONFIGDIR = configdir
 else:
     configdir = basedir
@@ -28,17 +28,17 @@ else:
 
 DEFAULT_THEME_COL = "#8BA5C8"
 
-HELP_URL = "https://github.com/ChaozhongLiu/DyberPet/issues"
-PROJECT_URL = "https://github.com/ChaozhongLiu/DyberPet"
-DEVDOC_URL = "https://github.com/ChaozhongLiu/DyberPet/blob/main/docs/art_dev.md"
+HELP_URL = "https://github.com/ChaozhongLiu/ClawPet/issues"
+PROJECT_URL = "https://github.com/ChaozhongLiu/ClawPet"
+DEVDOC_URL = "https://github.com/ChaozhongLiu/ClawPet/blob/main/docs/art_dev.md"
 VERSION = "v0.6.7"
 AUTHOR = "https://github.com/ChaozhongLiu"
-CHARCOLLECT_LINK = "https://github.com/ChaozhongLiu/DyberPet/blob/main/docs/collection.md"
-ITEMCOLLECT_LINK = "https://github.com/ChaozhongLiu/DyberPet/blob/main/docs/collection.md"
-PETCOLLECT_LINK = "https://github.com/ChaozhongLiu/DyberPet/blob/main/docs/collection.md"
+CHARCOLLECT_LINK = "https://github.com/ChaozhongLiu/ClawPet/blob/main/docs/collection.md"
+ITEMCOLLECT_LINK = "https://github.com/ChaozhongLiu/ClawPet/blob/main/docs/collection.md"
+PETCOLLECT_LINK = "https://github.com/ChaozhongLiu/ClawPet/blob/main/docs/collection.md"
 
-RELEASE_API = "https://api.github.com/repos/ChaozhongLiu/DyberPet/releases/latest"
-RELEASE_URL = "https://github.com/ChaozhongLiu/DyberPet/releases/latest"
+RELEASE_API = "https://api.github.com/repos/ChaozhongLiu/ClawPet/releases/latest"
+RELEASE_URL = "https://github.com/ChaozhongLiu/ClawPet/releases/latest"
 UPDATE_NEEDED = False
 
 HP_TIERS = [0,50,80,100]

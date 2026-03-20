@@ -32,13 +32,13 @@ from .custom_base import Ui_SaveNameDialog
 from .custom_base import HyperlinkButton as DyperlinkButton
 from .custom_combobox import ComboBox
 
-import DyberPet.settings as settings
-from DyberPet.config import load_ItemMod
-from DyberPet.utils import text_wrap
+import ClawPet.settings as settings
+from ClawPet.config import load_ItemMod
+from ClawPet.utils import text_wrap
 
 from sys import platform
 basedir = settings.BASEDIR
-module_path = os.path.join(basedir, 'DyberPet/DyberSettings/')
+module_path = os.path.join(basedir, 'ClawPet/ClawSettings/')
 
 
 

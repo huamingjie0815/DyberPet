@@ -5,7 +5,7 @@ import time
 import os.path
 from datetime import datetime, timedelta
 from sys import platform
-from DyberPet.utils import text_wrap, get_child_folder
+from ClawPet.utils import text_wrap, get_child_folder
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage, QPixmap
@@ -23,7 +23,7 @@ else:
 
 
 if platform == 'linux':
-    configdir = os.path.dirname(os.environ['HOME']+'/.config/DyberPet/DyberPet')
+    configdir = os.path.dirname(os.environ['HOME']+'/.config/ClawPet/ClawPet')
 else:
     configdir = basedir
 

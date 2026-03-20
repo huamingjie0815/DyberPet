@@ -5,7 +5,7 @@ import uuid
 from datetime import datetime
 from dataclasses import dataclass, field, asdict
 
-import DyberPet.settings as settings
+import ClawPet.settings as settings
 
 HISTORY_DIR = os.path.join(settings.CONFIGDIR, "data", "chat_history")
 

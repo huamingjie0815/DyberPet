@@ -1,9 +1,9 @@
-# DyberPet 完整程序设计说明
+# ClawPet 完整程序设计说明
 
 ## 1. 项目概述
 
 ### 1.1 项目介绍
-- **名称**: 呆啵宠物 (DyberPet)
+- **名称**: 呆啵宠物 (ClawPet)
 - **版本**: v0.7.7
 - **定义**: 基于 PySide6 的桌面宠物开发框架
 - **目标**: 为开发者提供创造桌面宠物的底层软件框架
@@ -30,8 +30,8 @@
 ### 2.1 应用架构层级
 ```
 ┌─────────────────────────────────────────────────────────┐
-│              Application Entry (run_DyberPet.py)        │
-│                    DyberPetApp (QApplication)           │
+│              Application Entry (run_ClawPet.py)        │
+│                    ClawPetApp (QApplication)           │
 └────────────┬────────────────────────────────────────────┘
              │
     ┌────────┴─────────┬──────────────────┐
@@ -73,8 +73,8 @@
 ### 2.2 模块化结构
 
 ```
-DyberPet/
-├── DyberPet.py              # 主宠物窗口 (PetWidget) - 核心UI
+ClawPet/
+├── ClawPet.py              # 主宠物窗口 (PetWidget) - 核心UI
 ├── modules.py               # 核心模块 (Animation, Buff, Bubble处理)
 ├── conf.py                  # 配置系统 (PetConfig, ActData 等)
 ├── settings.py              # 设置系统 (全局设置, 宠物数据)
@@ -142,12 +142,12 @@ data/                        # 数据文件
 
 ## 3. 核心模块设计
 
-### 3.1 Application Entry (run_DyberPet.py)
+### 3.1 Application Entry (run_ClawPet.py)
 
-#### 3.1.1 DyberPetApp 类
+#### 3.1.1 ClawPetApp 类
 
 ```python
-class DyberPetApp(QApplication)
+class ClawPetApp(QApplication)
 ```
 
 **职责**:
@@ -170,7 +170,7 @@ class DyberPetApp(QApplication)
 
 ---
 
-### 3.2 Main Pet Widget (DyberPet.py)
+### 3.2 Main Pet Widget (ClawPet.py)
 
 #### 3.2.1 DP_HpBar (HP进度条)
 
@@ -1173,14 +1173,14 @@ class DyberControlPanel(FluentWindow)
 ### 5.1 宠物初始化流程
 
 ```
-run_DyberPet.py
+run_ClawPet.py
     ↓
-DyberPetApp.__init__()
+ClawPetApp.__init__()
     ├─> qApp.setQuitOnLastWindowClosed(False)
     ├─> 初始化屏幕配置
     └─> 保存版本号
     ↓
-DyberPetApp.main()
+ClawPetApp.main()
     ├─> settings.init()  # 加载全局设置
     ├─> 加载当前宠物: settings.petname
     ├─> 创建 PetWidget(petname)
@@ -1341,7 +1341,7 @@ if not HP_stop flag:
 
 - Windows: 程序目录 (`basedir = ''`)
 - Mac/Linux: 程序父目录 (`basedir = dirname(dirname(__file__))`)
-- 配置目录: Windows/Mac同basedir，Linux为`~/.config/DyberPet/`
+- 配置目录: Windows/Mac同basedir，Linux为`~/.config/ClawPet/`
 
 ### 6.4 支持的语言
 
@@ -1685,7 +1685,7 @@ pip install pynput
 pip install tendo
 
 # 运行
-python run_DyberPet.py
+python run_ClawPet.py
 ```
 
 ### 11.2 打包为可执行文件
@@ -1696,7 +1696,7 @@ pyinstaller --noconsole \
   --icon="000.ico" \
   --hidden-import="pynput.mouse._win32" \
   --hidden-import="pynput.keyboard._win32" \
-  run_DyberPet.py
+  run_ClawPet.py
 ```
 
 **Mac**:
@@ -1704,10 +1704,10 @@ pyinstaller --noconsole \
 pyinstaller --windowed \
   --icon 000.icns \
   --add-data="res:res" \
-  --add-data="DyberPet:DyberPet" \
+  --add-data="ClawPet:ClawPet" \
   --hidden-import="pynput.mouse._darwin" \
   --hidden-import="pynput.keyboard._darwin" \
-  run_DyberPet.py
+  run_ClawPet.py
 ```
 
 **Linux**: 类似Mac配置
@@ -1748,8 +1748,8 @@ pyinstaller --windowed \
 
 | 文件路径 | 主要类 | 作用 |
 |---------|--------|------|
-| run_DyberPet.py | DyberPetApp | 应用入口 |
-| DyberPet.py | PetWidget, DP_HpBar | 主宠物窗口 |
+| run_ClawPet.py | ClawPetApp | 应用入口 |
+| ClawPet.py | PetWidget, DP_HpBar | 主宠物窗口 |
 | modules.py | Animation_worker, BuffAdd, BuffAlt | 核心游戏逻辑 |
 | conf.py | PetConfig, Act, PetData, ActData, TaskData, ItemData | 配置系统 |
 | settings.py | (全局变量和常数) | 全局设置 |
@@ -1784,5 +1784,5 @@ pyinstaller --windowed \
 
 **文档版本**: v1.0  
 **最后更新**: 2026年3月17日  
-**适用版本**: DyberPet v0.7.7+
+**适用版本**: ClawPet v0.7.7+
 

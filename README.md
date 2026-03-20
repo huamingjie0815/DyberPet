@@ -1,18 +1,18 @@
 <h1 align="center">
-  呆啵宠物  |  DyberPet
+  呆啵宠物  |  ClawPet
 </h1>
 
 <p align="center">
-  呆啵宠物 (DyberPet) 是一个基于 PySide6 的桌面宠物开发框架，致力于为开发者提供创造桌面宠物的底层软件
+  呆啵宠物 (ClawPet) 是一个基于 PySide6 的桌面宠物开发框架，致力于为开发者提供创造桌面宠物的底层软件
 </p>
 
 <p align="center">
   <a>
-    <img src="https://img.shields.io/github/license/ChaozhongLiu/DyberPet.svg">
+    <img src="https://img.shields.io/github/license/ChaozhongLiu/ClawPet.svg">
   </a>
 
   <a style="text-decoration:none">
-    <img src="https://img.shields.io/github/downloads/ChaozhongLiu/DyberPet/total.svg"/>
+    <img src="https://img.shields.io/github/downloads/ChaozhongLiu/ClawPet/total.svg"/>
   </a>
 
   <a style="text-decoration:none">
@@ -20,7 +20,7 @@
   </a>
 
   <a style="text-decoration:none">
-    <img src="https://img.shields.io/badge/DyberPet-v0.7.7-green.svg"/>
+    <img src="https://img.shields.io/badge/ClawPet-v0.7.7-green.svg"/>
   </a>
 </p>
 
@@ -28,7 +28,7 @@
 简体中文 | <a href="README_EN.md">English</a>
 </p>
 
-![Interface](https://raw.githubusercontent.com/ChaozhongLiu/DyberPet/main/docs/DyberPet.png)
+![Interface](https://raw.githubusercontent.com/ChaozhongLiu/ClawPet/main/docs/ClawPet.png)
 
   
 :octocat: 目前项目正在开发 LLM 相关的功能，非常需要更多伙伴的加入。  
@@ -37,16 +37,16 @@
   
 如果你喜欢这个桌宠程序，请点击右上角的 ⭐ **STAR**，这对我们有很大的激励！
   
-:new: **03-01-2025: v0.7.7** 程序已打包上传 [Release](https://github.com/ChaozhongLiu/DyberPet/releases/tag/v0.7.7)，有任何问题欢迎向我反馈！(LLM 模块暂未开源)  
+:new: **03-01-2025: v0.7.7** 程序已打包上传 [Release](https://github.com/ChaozhongLiu/ClawPet/releases/tag/v0.7.7)，有任何问题欢迎向我反馈！(LLM 模块暂未开源)  
   
-:new: **06-26-2024**: CSDN 正大规模从 GitHub 搬运开源项目至其旗下 GitCode，包括 DyberPet。该仓库与我们没有任何关系。GitCode 使用我名字的主页也并非我本人创建，也请仔细甄别您在 GitCode 上看到的其他项目！
+:new: **06-26-2024**: CSDN 正大规模从 GitHub 搬运开源项目至其旗下 GitCode，包括 ClawPet。该仓库与我们没有任何关系。GitCode 使用我名字的主页也并非我本人创建，也请仔细甄别您在 GitCode 上看到的其他项目！
   
 :new: **04-06-2024: v0.3.7** 已适配至 PySide6-Fluent-Widgets v1.5.4。 如果你在使用 Terminal 运行本程序，请用 pip 更新 PySide6-Fluent-Widgets。  
   
   
 ## 快速体验 Demo
 ### Windows 用户
-  将 Release 下载至本地，双击 **``run_DyberPet.exe``** 即可
+  将 Release 下载至本地，双击 **``run_ClawPet.exe``** 即可
 
 
 ### Windows Terminal
@@ -60,7 +60,7 @@
   pip install pyside6==6.5.2
   pip install tendo
   ```
-  将仓库下载至本地，之后运行 **``run_DyberPet.py``** 即可
+  将仓库下载至本地，之后运行 **``run_ClawPet.py``** 即可
 
   
 ### MacOS 用户
@@ -74,7 +74,7 @@
   pip install pyside6==6.5.2
   pip install tendo
   ```
-  将仓库下载至本地，之后运行 **``run_DyberPet.py``** 即可
+  将仓库下载至本地，之后运行 **``run_ClawPet.py``** 即可
   
 
 ## 素材与模组合集 
@@ -382,7 +382,7 @@
 
 **v0.3.4 - 12/13/2023**
 - BUFF系统 init
-  - 物品（包括宠物）添加了 ``buff`` 属性，详见 [buffModule](DyberPet/Dashboard/buffModule.py)
+  - 物品（包括宠物）添加了 ``buff`` 属性，详见 [buffModule](ClawPet/Dashboard/buffModule.py)
   - 状态面板添加了 Buff 的运算和 UI，仍在施工中
 - 薯条、汉堡、派蒙均添加了 ``buff`` 属性作为demo的例子
 - ``HP`` 下降timer缩短为1分钟
